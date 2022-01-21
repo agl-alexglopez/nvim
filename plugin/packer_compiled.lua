@@ -69,6 +69,11 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  ["github-nvim-theme"] = {
+    loaded = true,
+    path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\github-nvim-theme",
+    url = "https://github.com/projekt0n/github-nvim-theme"
+  },
   ["lualine.nvim"] = {
     loaded = true,
     path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\lualine.nvim",
@@ -83,11 +88,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\packer.nvim",
     url = "https://github.com/wbthomason/packer.nvim"
-  },
-  ["tokyonight.nvim"] = {
-    loaded = true,
-    path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\tokyonight.nvim",
-    url = "https://github.com/folke/tokyonight.nvim"
   }
 }
 
