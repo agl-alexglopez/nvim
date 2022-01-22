@@ -13,8 +13,11 @@ vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
 -- GUI
 vim.opt.showmatch = true
 vim.opt.laststatus = 2
-vim.opt.wrap = false
+vim.opt.wrap = true
 vim.opt.colorcolumn = '100'
+
+--KeyMap
+vim.api.nvim_set_keymap('i', 'fd', '<esc>', {})
 
 -- Tabs Spaces White Char
 vim.opt.autoindent = true
