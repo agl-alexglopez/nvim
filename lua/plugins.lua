@@ -14,4 +14,6 @@ return require('packer').startup(function()
 
   use "projekt0n/github-nvim-theme"
 
+  use "windwp/nvim-autopairs"
+
 end)

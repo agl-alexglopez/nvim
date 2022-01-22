@@ -21,7 +21,6 @@ vim.api.nvim_set_keymap('i', 'fd', '<esc>', {})
 
 -- Tabs Spaces White Char
 vim.opt.autoindent = true
-vim.opt.smartindent = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
