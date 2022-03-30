@@ -7,6 +7,8 @@ vim.opt.mouse = 'a'
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.swapfile = false
 vim.opt.completeopt = 'menuone,noselect'
+-- relative numbers can be slower for larger files
+--vim.opt.relativenumber = true
 -- don't auto commenting new lines
 vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
 
