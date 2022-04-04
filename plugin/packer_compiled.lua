@@ -79,6 +79,21 @@ _G.packer_plugins = {
     path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
+  ["nvim-autopairs"] = {
+    loaded = true,
+    path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\nvim-autopairs",
+    url = "https://github.com/windwp/nvim-autopairs"
+  },
+  ["nvim-lsp-installer"] = {
+    loaded = true,
+    path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\nvim-lsp-installer",
+    url = "https://github.com/williamboman/nvim-lsp-installer"
+  },
+  ["nvim-lspconfig"] = {
+    loaded = true,
+    path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\nvim-lspconfig",
+    url = "https://github.com/neovim/nvim-lspconfig"
+  },
   ["nvim-treesitter"] = {
     loaded = true,
     path = "C:\\Users\\aglop\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\nvim-treesitter",
@@ -102,5 +117,6 @@ if should_profile then save_profiles() end
 end)
 
 if not no_errors then
+  error_msg = error_msg:gsub('"', '\\"')
   vim.api.nvim_command('echohl ErrorMsg | echom "Error in packer_compiled: '..error_msg..'" | echom "Please check your config for correctness" | echohl None')
 end
