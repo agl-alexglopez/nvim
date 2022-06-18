@@ -116,6 +116,9 @@ cmp.setup({
       -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
     end,
   },
+  -- Adds nice highlight to first option in the autocomplete menu.
+  completion = {completeopt = 'menu,menuone,noinsert'},
+  -- Visual border for autocomplete opts.
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
