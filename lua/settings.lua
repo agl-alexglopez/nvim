@@ -6,7 +6,7 @@ vim.opt.startofline = true
 vim.opt.mouse = 'a'
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.swapfile = false
-vim.opt.completeopt = 'menuone,noselect'
+vim.opt.completeopt = 'menu,menuone,noselect'
 -- relative numbers can be slower for larger files
 --vim.opt.relativenumber = true
 -- don't auto commenting new lines
