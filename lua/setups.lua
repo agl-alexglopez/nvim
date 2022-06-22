@@ -49,64 +49,21 @@ require'nvim-treesitter.configs'.setup({
 local npairs = require("nvim-autopairs")
 
 npairs.setup({
-    check_ts = true,
-    ts_config = {
-        lua = {'string'},-- it will not add a pair on that treesitter node
-        javascript = {'template_string'},
-        java = false,-- don't check treesitter on java
-    }
+  check_ts = true,
+  ts_config = {
+    lua = {'string'},-- it will not add a pair on that treesitter node
+      javascript = {'template_string'},
+      java = false,-- don't check treesitter on java
+  }
 })
 
 -- ---------------------------completions and lsp----------
-
-local lsp_installer = require("nvim-lsp-installer")
-
--- Register a handler that will be called for each installed server when it's ready
--- (i.e. when installation is finished
--- or if the server is already installed).
-lsp_installer.on_server_ready(function(server)
-    -- local opts = {},
-
-    -- Equivalent to adding each of the servers you are using to path so they haver permissions to
-    -- run and are fed to the lspconfig.
-    server:setup {'clangd', 'pyright'}
-
-    -- (optional) Customize the options passed to the server
-    -- if server.name == "tsserver" then
-    --     opts.root_dir = function() ... end
-    -- end
-
-    -- This setup() function will take the provided server configuration and decorate it with the
-    -- necessary properties
-    -- before passing it onwards to lspconfig.
-    -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-    -- server:setup(opts)
-end)
-
-require('cmp').setup({
-  sources = {
-    { name = 'buffer' },
-  },
-})
-
-require'cmp'.setup {
-  sources = {
-    { name = 'path' }
-  }
-}
-
-require'cmp'.setup.cmdline(':', {
-  sources = {
-    { name = 'cmdline' }
-  }
-})
-
-require'cmp'.setup.cmdline('/', {
-  sources = {
-    { name = 'buffer' }
-  }
-})
-
+-- Massively simplified this section. Servers now at least work. Add to as needed.
+require("nvim-lsp-installer").setup {}
+local lsp_config = require("lspconfig")
+-- Setup lspconfig. Other setups and options could precede these commands.
+lsp_config.clangd.setup {}
+lsp_config.pyright.setup {}
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
@@ -173,19 +130,3 @@ cmp.setup.cmdline(':', {
   })
 })
 
--- Setup lspconfig.
-local lsp_flags = {
-  debounce_text_changes = 150,
-}
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-require('lspconfig')['clangd'].setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = lsp_flags,
-}
-require('lspconfig')['pyright'].setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = lsp_flags,
-}
