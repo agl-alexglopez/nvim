@@ -23,7 +23,7 @@ require('lualine').setup ({
 
 require'nvim-treesitter.configs'.setup({
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-   ensure_installed = {'python', 'cpp', 'c'},
+   ensure_installed = {'python', 'cpp', 'c', 'markdown'},
 
   -- Install languages synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -64,6 +64,7 @@ local lsp_config = require("lspconfig")
 -- Setup lspconfig. Other setups and options could precede these commands.
 lsp_config.clangd.setup {}
 lsp_config.pyright.setup {}
+lsp_config.marksman.setup {}
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
