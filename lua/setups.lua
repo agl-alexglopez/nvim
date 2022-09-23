@@ -1,5 +1,5 @@
 require('github-theme').setup({
-  theme_style = "light",
+  theme_style = "light_default",
   comment_style = "NONE",
   sidebars = {"qf", "vista_kind", "terminal", "packer"},
 
@@ -59,6 +59,7 @@ npairs.setup({
 })
 
 -- ---------------------------completions and lsp----------
+
 -- Massively simplified this section. Servers now at least work. Add to as needed.
 require("nvim-lsp-installer").setup {}
 local lsp_config = require("lspconfig")
@@ -90,19 +91,28 @@ cmp.setup({
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    ['<c-y>'] = cmp.mapping.confirm({-- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      behavior = cmp.ConfirmBehavior.Insert,
+      select = true,
+    }),
+    ['<c-Space>'] = cmp.mapping.complete(),
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
+    { name = 'nvim_lua' },
     -- { name = 'vsnip' }, -- For vsnip users.
     { name = 'luasnip' }, -- For luasnip users.
     -- { name = 'ultisnips' }, -- For ultisnips users.
     -- { name = 'snippy' }, -- For snippy users.
-  }, {
-    { name = 'buffer' },
-  })
+    { name = 'path' },
+    { name = 'buffer', keyword_length = 3},
+  }),
+  experimental = {
+    native_menu = false,
+    ghost_text = true,
+  },
+
 })
 
 -- Set configuration for specific filetype.
@@ -110,7 +120,7 @@ cmp.setup.filetype('gitcommit', {
   sources = cmp.config.sources({
     { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
   }, {
-    { name = 'buffer' },
+    { name = 'buffer', keyword_length = 3},
   })
 })
 
@@ -118,7 +128,7 @@ cmp.setup.filetype('gitcommit', {
 cmp.setup.cmdline('/', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = {
-    { name = 'buffer' }
+    { name = 'buffer', keyword_length = 3 },
   }
 })
 
@@ -126,9 +136,9 @@ cmp.setup.cmdline('/', {
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
-    { name = 'path' }
+    { name = 'path' },
   }, {
-    { name = 'cmdline' }
+    { name = 'cmdline', keyword_length = 3 },
   })
 })
 
