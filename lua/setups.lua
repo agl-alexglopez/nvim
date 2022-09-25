@@ -14,13 +14,48 @@ require('github-theme').setup({
     }
   end
 })
-require('nvim-web-devicons').setup()
+
 require('lualine').setup ({
   options = {
     theme = 'auto',
   }
 })
 
+require('Comment').setup({
+  opleader = {
+    -- line comment keymap
+    line = 'gc',
+    -- block comment keymap
+    block = 'gb',
+  },
+  mappings = {
+    -- operator-pending mapping
+    -- Includes:
+    -- 'gcc'                -> line-comment the current line
+    -- 'gcb'                -> block-comment the current line
+    -- 'gc[count]{motion}'  -> line-comment the region contained in {motion}.
+    -- 'gb[count]{motion}'  -> block-comment the region contained in {motion}.
+    basic = true,
+
+    -- extra mapping
+    -- Includes
+    -- 'gco' -> start new comment line below
+    -- 'gcO' -> start new comment line above
+    -- 'gcA' -> append comment end of line.
+    extra = true,
+
+    -- Pre-hook called before commenting the line is done
+    -- Can be used to determine comment string value.
+    pre_hook = nil,
+    -- Post-hook called after commenting is done
+    -- Can be used to alter any formatting / new lines / etc. after commenting
+    post_hook = nil,
+    -- Can be used to ignore certain lines when doing linewise motions.
+    -- Can be string (lua regex)
+    -- Or function (that returns lua regex)
+    ignore = nil,
+  }
+})
 
 require'nvim-treesitter.configs'.setup({
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
@@ -141,4 +176,6 @@ cmp.setup.cmdline(':', {
     { name = 'cmdline', keyword_length = 3 },
   })
 })
+
+-- Luasnip setup
 

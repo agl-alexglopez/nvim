@@ -25,6 +25,8 @@ return require('packer').startup(function()
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   }
+  -- Comment.nvim
+  use 'numToStr/Comment.nvim'
 
   use "projekt0n/github-nvim-theme"
 
