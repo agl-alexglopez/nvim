@@ -1,6 +1,9 @@
 require('github-theme').setup({
   theme_style = "light_default",
   comment_style = "NONE",
+  keyword_style = "NONE",
+  function_style = "NONE",
+  variable_style = "NONE",
   sidebars = {"qf", "vista_kind", "terminal", "packer"},
 
   colors = {hint = "orange", error = "#ff0000"},
