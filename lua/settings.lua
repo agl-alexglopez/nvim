@@ -9,8 +9,8 @@ vim.opt.swapfile = false
 vim.opt.completeopt = 'menu,menuone,noselect'
 -- relative numbers can be slower for larger files
 --vim.opt.relativenumber = true
--- don't auto commenting new lines
-vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
+-- don't auto commenting new lines n.b. turning off for now to see if I like auto commenting.
+-- vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
 
 -- GUI
 vim.opt.showmatch = true
