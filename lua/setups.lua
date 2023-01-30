@@ -18,12 +18,14 @@ require('github-theme').setup({
   end
 })
 
+-- The info bar at the bottom of the editor.
 require('lualine').setup ({
   options = {
     theme = 'auto',
   }
 })
 
+-- Better comments plugin.
 require('Comment').setup({
   opleader = {
     -- line comment keymap
@@ -85,9 +87,8 @@ require'nvim-treesitter.configs'.setup({
   },
 })
 
-local npairs = require("nvim-autopairs")
-
-npairs.setup({
+-- Adds pair completions for brackets, quotes, parens, etc.
+require("nvim-autopairs").setup({
   check_ts = true,
   ts_config = {
     lua = {'string'},-- it will not add a pair on that treesitter node
