@@ -44,7 +44,7 @@ vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
--- Terminal
+-- Terminal for a convenient right split.
 -- open a terminal pane on the right using :Term
 vim.cmd [[command Term :botright vsplit term://$SHELL]]
 -- Terminal visual tweaks
