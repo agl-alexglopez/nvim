@@ -62,9 +62,9 @@ require('Comment').setup({
   }
 })
 
-require'nvim-treesitter.configs'.setup({
+require('nvim-treesitter.configs').setup({
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-   ensure_installed = {'python', 'cpp', 'c', 'markdown', 'lua'},
+   ensure_installed = {'python', 'cpp', 'c', 'markdown', 'lua', 'rust'},
 
   -- Install languages synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -77,7 +77,7 @@ require'nvim-treesitter.configs'.setup({
     enable = true,
 
     -- list of language that will be disabled
-    --disable = { "c", "rust" },
+    -- disable = { "" },
 
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
@@ -106,6 +106,11 @@ local lsp_config = require("lspconfig")
 lsp_config.clangd.setup {}
 lsp_config.pyright.setup {}
 lsp_config.marksman.setup {}
+lsp_config.rust_analyzer.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  cmd = {"rustup", "run", "stable", "rust-analyzer",}
+}
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
