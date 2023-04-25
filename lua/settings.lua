@@ -16,15 +16,15 @@ vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.showmatch = true
 vim.opt.laststatus = 2
 vim.opt.wrap = true
-vim.opt.colorcolumn = '100'
+vim.opt.colorcolumn = '116'
 
 --KeyMap
 vim.api.nvim_set_keymap('i', 'fd', '<esc>', {})
 
 -- Tabs Spaces White Char
 vim.opt.autoindent = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 -- remove whitespace on save
 vim.cmd[[au BufWritePre * :%s/\s\+$//e]]

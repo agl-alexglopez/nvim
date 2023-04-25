@@ -1,22 +1,42 @@
 require('github-theme').setup({
-  theme_style = "light_default",
-  comment_style = "NONE",
-  keyword_style = "NONE",
-  function_style = "NONE",
-  variable_style = "NONE",
-  sidebars = {"qf", "vista_kind", "terminal", "packer"},
+  options = {
+    styles = {
+      comments = "NONE",
+      functions = "NONE",
+      keywords = "NONE",
+      variables = "NONE",
+    },
+    darken = {
+      sidebars = {
+        list = {
+          "qf", "vista_kind", "terminal", "packer"
+        },
+      },
+    },
+  },
 
-  colors = {hint = "orange", error = "#ff0000"},
-  -- Overwrite the highlight groups
-  overrides = function(c)
-    return {
-      htmlTag = {fg = c.red, bg = "#282c34", sp = c.hint, style = "underline"},
-      DiagnosticHint = {link = "LspDiagnosticsDefaultHint"},
+  specs = {
+    -- Change the "hint" color to the "orange" color, and make the "error" color bright red.
+    all = {
+      diag = {
+        error = '#ff0000',
+        hint = 'orange',
+      },
+    },
+  },
+
+  -- Overwrite the highlight groups for all colorschemes
+  groups = {
+    all = {
+      htmlTag = { fg = 'palette.red', bg = '#282c34', sp = 'diag.hint', style = 'underline,bold' },
+      DiagnosticHint = { link = 'LspDiagnosticsDefaultHint' },
       -- this will remove the highlight groups
       TSField = {},
-    }
-  end
+    },
+  },
 })
+
+vim.cmd('colorscheme github_light_high_contrast')
 
 -- The info bar at the bottom of the editor.
 require('lualine').setup ({
@@ -103,7 +123,10 @@ require("nvim-autopairs").setup({
 require("nvim-lsp-installer").setup {}
 local lsp_config = require("lspconfig")
 -- Setup lspconfig. Other setups and options could precede these commands.
-lsp_config.clangd.setup {}
+lsp_config.clangd.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+}
 lsp_config.pyright.setup {}
 lsp_config.marksman.setup {}
 lsp_config.rust_analyzer.setup {
