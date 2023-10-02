@@ -155,7 +155,8 @@ require("nvim-autopairs").setup({
 -- ---------------------------completions and lsp----------
 
 -- Massively simplified this section. Servers now at least work. Add to as needed.
-require("nvim-lsp-installer").setup {}
+require("mason").setup {}
+require("mason-lspconfig").setup {}
 local lsp_config = require("lspconfig")
 -- Setup lspconfig. Other setups and options could precede these commands.
 lsp_config.clangd.setup {
@@ -167,7 +168,7 @@ lsp_config.marksman.setup {}
 lsp_config.rust_analyzer.setup {
   capabilities = capabilities,
   on_attach = on_attach,
-  cmd = {"rustup", "run", "stable", "rust-analyzer",}
+  cmd = {"rustup", "run", "stable", "rust-analyzer",},
 }
 
 -- Setup nvim-cmp.
