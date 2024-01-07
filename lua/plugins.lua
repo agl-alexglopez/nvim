@@ -71,7 +71,12 @@ require('lazy').setup({
     dependencies = { 'kyazdani42/nvim-web-devicons', opt = true }
   },
 
-  "projekt0n/github-nvim-theme",
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
 
   "windwp/nvim-autopairs",
 })
