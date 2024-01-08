@@ -13,7 +13,9 @@ require("tokyonight").setup({
       fg = "#ffffff"
     },
     keywords = { italic = false },
-    functions = {},
+    functions = {
+      fg = "#5af78e"
+    },
     variables = {},
     -- Background styles. Can be "dark", "transparent" or "normal"
     sidebars = "dark", -- style for sidebars, see below
