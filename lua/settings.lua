@@ -19,7 +19,7 @@ vim.opt.wrap = true
 vim.opt.colorcolumn = '116'
 
 --KeyMap
-vim.api.nvim_set_keymap('i', '<Ctrl-i>', '<Esc>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-j>', '<Esc>', {})
 
 -- Tabs Spaces White Char
 vim.opt.autoindent = true
