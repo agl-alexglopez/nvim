@@ -194,6 +194,7 @@ local lsp_config = require("lspconfig")
 lsp_config.clangd.setup {
   capabilities = capabilities,
   on_attach = on_attach,
+  cmd = {"clangd"},
 }
 lsp_config.pyright.setup {}
 lsp_config.marksman.setup {}
