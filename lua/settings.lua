@@ -4,9 +4,9 @@ vim.opt.backspace = "indent,eol,start" -- backspace works on every char in inser
 vim.opt.history = 1000
 vim.opt.startofline = true
 vim.opt.mouse = 'a'
-vim.opt.clipboard = 'unnamedplus'
 vim.opt.swapfile = false
 vim.opt.completeopt = 'menu,menuone,noselect'
+vim.opt.clipboard = "unnamedplus"
 -- relative numbers can be slower for larger files
 --vim.opt.relativenumber = true
 -- don't auto commenting new lines n.b. turning off for now to see if I like auto commenting.
@@ -20,6 +20,7 @@ vim.opt.colorcolumn = '116'
 
 --KeyMap
 vim.api.nvim_set_keymap('i', '<C-j>', '<Esc>', {})
+vim.api.nvim_set_keymap('t', '<C-j>', '<C-\\><C-N>', {})
 
 -- Tabs Spaces White Char
 vim.opt.autoindent = true
@@ -27,7 +28,7 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 -- remove whitespace on save
-vim.cmd[[au BufWritePre * :%s/\s\+$//e]]
+-- vim.cmd[[au BufWritePre * :%s/\s\+$//e]]
 -- 2 spaces for select filetypes
 vim.cmd [[
   autocmd FileType xml,html,xhtml,css,scss,javascript,lua,yaml setlocal shiftwidth=2 tabstop=2
