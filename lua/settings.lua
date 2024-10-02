@@ -73,6 +73,9 @@ vim.cmd [[
     autocmd BufLeave term://* stopinsert
 ]]
 
+-- auto formatting
+vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]]
+
 -- Theme
 vim.opt.termguicolors = true
 
@@ -85,7 +88,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 
 -- document existing key chains
-require('which-key').register({
+require('which-key').add({
   { '<leader>c', group = '[C]ode' },
   {'<leader>d', group = '[D]ocument' },
   {'<leader>g', group = '[G]it' },
