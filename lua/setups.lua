@@ -191,6 +191,19 @@ require("mason").setup {}
 require("mason-lspconfig").setup {}
 local lsp_config = require("lspconfig")
 -- Setup lspconfig. Other setups and options could precede these commands.
+vim.filetype.add({
+  extension = {
+    cpp = "cpp",
+    cxx = "cpp",
+    cx = "cpp",
+    cc = "cpp",
+    hpp = "cpp",
+    hh = "cpp",
+    hx = "cpp",
+    c = "c",
+    h = "c",
+  },
+})
 lsp_config.clangd.setup {
   filetypes = {"c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx"},
   capabilities = capabilities,
