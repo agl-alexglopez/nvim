@@ -205,6 +205,7 @@ vim.filetype.add({
   },
 })
 lsp_config.clangd.setup {
+  filetypes = {"c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx"},
   capabilities = capabilities,
   on_attach = on_attach,
 }
