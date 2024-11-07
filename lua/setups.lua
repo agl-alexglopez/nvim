@@ -237,6 +237,13 @@ cmp.setup({
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
   },
+  experimental = {
+    native_menu = false,
+    ghost_text = true,
+  },
+  view = {                                                        
+    entries = {name = 'custom', selection_order = 'near_cursor' } 
+  },
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -248,20 +255,17 @@ cmp.setup({
     }),
   }),
   sources = cmp.config.sources({
+    { name = 'path' },
     { name = 'nvim_lsp' },
     { name = 'nvim_lua' },
+    { name = 'nvim_lsp_signature_help' },
     -- { name = 'vsnip' }, -- For vsnip users.
     { name = 'luasnip' }, -- For luasnip users.
     -- { name = 'ultisnips' }, -- For ultisnips users.
     -- { name = 'snippy' }, -- For snippy users.
-    { name = 'path' },
-    { name = 'buffer', keyword_length = 3},
-  }),
-  experimental = {
-    native_menu = false,
-    ghost_text = true,
-  },
-
+  }, {
+    { name = 'buffer', keyword_length = 3 },
+  })
 })
 
 -- Set configuration for specific filetype.
@@ -276,6 +280,9 @@ cmp.setup.filetype('gitcommit', {
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline('/', {
   mapping = cmp.mapping.preset.cmdline(),
+  view = {
+    entries = { name = 'wildmenu', seperator = '|' },
+  },
   sources = {
     { name = 'buffer', keyword_length = 3 },
   }
@@ -284,6 +291,9 @@ cmp.setup.cmdline('/', {
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
+  view = {
+    entries = { name = 'wildmenu', seperator = '|' },
+  },
   sources = cmp.config.sources({
     { name = 'path' },
   }, {

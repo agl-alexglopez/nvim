@@ -44,14 +44,15 @@ require('lazy').setup({
     dependencies = { {'nvim-lua/plenary.nvim'} }
   },
 
+  'L3MON4D3/LuaSnip', -- Snippets plugin
+  'saadparwaiz1/cmp_luasnip', -- Snippets source for nvim-cmp
   'hrsh7th/nvim-cmp', -- Autocompletion plugin
+  'hrsh7th/cmp-nvim-lsp-signature-help',
   'hrsh7th/cmp-buffer',
   'hrsh7th/cmp-path',
   'hrsh7th/cmp-nvim-lua', -- For writing lua neovim specific
   'hrsh7th/cmp-nvim-lsp', -- LSP source for nvim-cmp
   'hrsh7th/cmp-cmdline',
-  'L3MON4D3/LuaSnip', -- Snippets plugin
-  'saadparwaiz1/cmp_luasnip', -- Snippets source for nvim-cmp
 
   {
     "folke/which-key.nvim",
