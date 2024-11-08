@@ -16,7 +16,7 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.showmatch = true
 vim.opt.laststatus = 2
 vim.opt.wrap = true
-vim.opt.colorcolumn = '116'
+vim.opt.colorcolumn = '80'
 
 --KeyMap
 vim.api.nvim_set_keymap('i', '<C-j>', '<Esc>', {})
@@ -24,11 +24,11 @@ vim.api.nvim_set_keymap('t', '<C-j>', '<C-\\><C-N>', {})
 
 -- Tabs Spaces White Char
 vim.opt.autoindent = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 -- remove whitespace on save
--- vim.cmd[[au BufWritePre * :%s/\s\+$//e]]
+vim.cmd[[au BufWritePre * :%s/\s\+$//e]]
 -- 2 spaces for select filetypes
 vim.cmd [[
   autocmd FileType xml,html,xhtml,css,scss,javascript,lua,yaml setlocal shiftwidth=2 tabstop=2

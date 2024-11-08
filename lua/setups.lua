@@ -1,42 +1,18 @@
 require("tokyonight").setup({
   -- your configuration comes here
   -- or leave it empty to use the default settings
-  style = "night", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
-  light_style = "day", -- The theme is used when the background is set to light
-  transparent = false, -- Enable this to disable setting the background color
+  style = "moon", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
   terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
   styles = {
     -- Style to be applied to different syntax groups
     -- Value is any valid attr-list value for `:help nvim_set_hl`
-    comments = {
-      italic = false,
-      fg = "#ffffff"
-    },
+    comments = { italic = false },
     keywords = { italic = false },
-    functions = {
-      fg = "#5af78e"
-    },
-    variables = {},
     -- Background styles. Can be "dark", "transparent" or "normal"
     sidebars = "dark", -- style for sidebars, see below
     floats = "dark", -- style for floating windows
   },
-  sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
-  day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
-  hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
-  dim_inactive = false, -- dims inactive windows
-  lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
-
-  --- You can override specific color groups to use other groups or a hex color
-  --- function will be called with a ColorScheme table
-  ---@param colors ColorScheme
-  on_colors = function(colors) end,
-
-  --- You can override specific highlights to use other groups or a hex color
-  --- function will be called with a Highlights and ColorScheme table
-  ---@param highlights Highlights
-  ---@param colors ColorScheme
-  on_highlights = function(highlights, colors) end,
+  lualine_bold = true, -- When `true`, section headers in the lualine theme will be bold
 })
 
 vim.cmd[[colorscheme tokyonight]]
@@ -106,7 +82,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 
 require('nvim-treesitter.configs').setup({
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-   ensure_installed = {'python', 'cpp', 'c', 'markdown', 'lua', 'rust'},
+   ensure_installed = { 'python', 'cpp', 'c', 'markdown', 'lua', 'rust' },
 
   -- Install languages synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -133,8 +109,8 @@ require('nvim-treesitter.configs').setup({
 require("nvim-autopairs").setup({
   check_ts = true,
   ts_config = {
-    lua = {'string'},-- it will not add a pair on that treesitter node
-      javascript = {'template_string'},
+    lua = { 'string' },-- it will not add a pair on that treesitter node
+      javascript = { 'template_string' },
       java = false,-- don't check treesitter on java
   }
 })
@@ -205,7 +181,7 @@ vim.filetype.add({
   },
 })
 lsp_config.clangd.setup {
-  filetypes = {"c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx"},
+  filetypes = { "c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx" },
   capabilities = capabilities,
   on_attach = on_attach,
 }
@@ -214,7 +190,7 @@ lsp_config.marksman.setup {}
 lsp_config.rust_analyzer.setup {
   capabilities = capabilities,
   on_attach = on_attach,
-  cmd = {"rustup", "run", "stable", "rust-analyzer",},
+  cmd = { "rustup", "run", "stable", "rust-analyzer" },
 }
 
 -- Setup nvim-cmp.
@@ -231,7 +207,7 @@ cmp.setup({
     end,
   },
   -- Adds nice highlight to first option in the autocomplete menu.
-  completion = {completeopt = 'menu,menuone,noinsert'},
+  completion = { completeopt = 'menu,menuone,noinsert' },
   -- Visual border for autocomplete opts.
   window = {
     completion = cmp.config.window.bordered(),
@@ -241,8 +217,8 @@ cmp.setup({
     native_menu = false,
     ghost_text = true,
   },
-  view = {                                                        
-    entries = {name = 'custom', selection_order = 'near_cursor' } 
+  view = {
+    entries = { name = 'custom', selection_order = 'near_cursor' }
   },
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),

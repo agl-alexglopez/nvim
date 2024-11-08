@@ -20,6 +20,14 @@ vim.g.maplocalleader = ' '
 
 -- Plugins
 require('lazy').setup({
+
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
+
   'BurntSushi/ripgrep',
 
   {
@@ -71,13 +79,6 @@ require('lazy').setup({
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'kyazdani42/nvim-web-devicons', opt = true }
-  },
-
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {},
   },
 
   "windwp/nvim-autopairs",
