@@ -60,11 +60,11 @@ vim.o.timeoutlen = 300
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
-	callback = function()
-		vim.highlight.on_yank()
-	end,
-	group = highlight_group,
-	pattern = "*",
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+    group = highlight_group,
+    pattern = "*",
 })
 
 -- Terminal for a convenient right split.
@@ -94,11 +94,11 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- document existing key chains
 require("which-key").add({
-	{ "<leader>c", group = "[C]ode" },
-	{ "<leader>d", group = "[D]ocument" },
-	{ "<leader>g", group = "[G]it" },
-	{ "<leader>h", group = "More git" },
-	{ "<leader>r", group = "[R]ename" },
-	{ "<leader>s", group = "[S]earch" },
-	{ "<leader>w", group = "[W]orkspace" },
+    { "<leader>c", group = "[C]ode" },
+    { "<leader>d", group = "[D]ocument" },
+    { "<leader>g", group = "[G]it" },
+    { "<leader>h", group = "More git" },
+    { "<leader>r", group = "[R]ename" },
+    { "<leader>s", group = "[S]earch" },
+    { "<leader>w", group = "[W]orkspace" },
 })
