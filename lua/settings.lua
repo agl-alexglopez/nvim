@@ -1,4 +1,5 @@
 -- Basics
+vim.opt.termguicolors = true
 vim.opt.encoding = "utf-8"
 vim.opt.backspace = "indent,eol,start" -- backspace works on every char in insert mode
 vim.opt.history = 1000
@@ -84,9 +85,6 @@ vim.cmd([[
 vim.cmd([[
     autocmd BufWritePre <buffer> lua vim.lsp.buf.format()
 ]])
-
--- Theme
-vim.opt.termguicolors = true
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
