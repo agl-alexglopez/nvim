@@ -32,12 +32,12 @@ vim.opt.expandtab = true
 -- vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
 -- 2 spaces for select filetypes
 vim.cmd([[
-  autocmd FileType xml,html,xhtml,css,scss,javascript,lua,yaml setlocal shiftwidth=2 tabstop=2 shiftwidth=2
+  autocmd FileType xml,html,xhtml,css,scss,javascript,yaml setlocal shiftwidth=2 tabstop=2 shiftwidth=2
 ]])
 
 -- 4 spaces for select filetypes
 vim.cmd([[
-  autocmd FileType c,cc,cpp,cx,cxx,h,hh,hpp,hx,hxx setlocal softtabstop=4 tabstop=4 shiftwidth=4
+  autocmd FileType c,cc,cpp,cx,cxx,h,hh,hpp,hx,hxx,lua setlocal softtabstop=4 tabstop=4 shiftwidth=4
 ]])
 
 -- Sidebar
