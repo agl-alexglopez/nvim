@@ -28,7 +28,6 @@ require("lazy").setup({
 		opts = {},
 	},
 
-	-- lazy.nvim
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",

@@ -24,14 +24,20 @@ vim.api.nvim_set_keymap("t", "<C-j>", "<C-\\><C-N>", {})
 
 -- Tabs Spaces White Char
 vim.opt.autoindent = true
+vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 -- remove whitespace on save
-vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
+-- vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
 -- 2 spaces for select filetypes
 vim.cmd([[
-  autocmd FileType xml,html,xhtml,css,scss,javascript,lua,yaml setlocal shiftwidth=2 tabstop=2
+  autocmd FileType xml,html,xhtml,css,scss,javascript,lua,yaml setlocal shiftwidth=2 tabstop=2 shiftwidth=2
+]])
+
+-- 4 spaces for select filetypes
+vim.cmd([[
+  autocmd FileType c,cc,cpp,cx,cxx,h,hh,hpp,hx,hxx setlocal softtabstop=4 tabstop=4 shiftwidth=4
 ]])
 
 -- Sidebar
