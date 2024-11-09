@@ -14,8 +14,26 @@ require("tokyonight").setup({
   },
   lualine_bold = true, -- When `true`, section headers in the lualine theme will be bold
 })
-
 vim.cmd[[colorscheme tokyonight]]
+
+require("noice").setup({
+  lsp = {
+    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+    },
+  },
+  -- you can enable a preset for easier configuration
+  presets = {
+    bottom_search = true, -- use a classic bottom cmdline for search
+    command_palette = true, -- position the cmdline and popupmenu together
+    long_message_to_split = true, -- long messages will be sent to a split
+    inc_rename = false, -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = false, -- add a border to hover docs and signature help
+  },
+})
 
 -- The info bar at the bottom of the editor.
 require('lualine').setup ({
@@ -256,9 +274,6 @@ cmp.setup.filetype('gitcommit', {
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline('/', {
   mapping = cmp.mapping.preset.cmdline(),
-  view = {
-    entries = { name = 'wildmenu', seperator = '|' },
-  },
   sources = {
     { name = 'buffer', keyword_length = 3 },
   }
@@ -267,9 +282,6 @@ cmp.setup.cmdline('/', {
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
-  view = {
-    entries = { name = 'wildmenu', seperator = '|' },
-  },
   sources = cmp.config.sources({
     { name = 'path' },
   }, {
