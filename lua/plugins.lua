@@ -31,15 +31,13 @@ require("lazy").setup({
     {
         "folke/noice.nvim",
         event = "VeryLazy",
-        opts = {
-            -- add any options here --
-        },
+        opts = {},
         dependencies = {
-            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+            -- If Lazy load -> add proper `module="..."` entries
             "MunifTanjim/nui.nvim",
             -- OPTIONAL:
             --   `nvim-notify` is only needed, if you want to use the notification view.
-            --   If not available, we use `mini` as the fallback
+            --   We use `mini` as the fallback
             "rcarriga/nvim-notify",
         },
     },
@@ -64,19 +62,19 @@ require("lazy").setup({
 
     {
         "nvim-telescope/telescope.nvim",
+        --or tag = '0.1.CHOOSE_LATEST_TAG_FROM_REPO'
         branch = "0.1.x",
-        -- or                            , tag = '0.1.CHOOSE_LATEST_TAG_FROM_REPO'
         dependencies = { { "nvim-lua/plenary.nvim" } },
     },
 
-    "L3MON4D3/LuaSnip", -- Snippets plugin
-    "saadparwaiz1/cmp_luasnip", -- Snippets source for nvim-cmp
-    "hrsh7th/nvim-cmp", -- Autocompletion plugin
+    "L3MON4D3/LuaSnip",
+    "saadparwaiz1/cmp_luasnip",
+    "hrsh7th/nvim-cmp",
     "hrsh7th/cmp-nvim-lsp-signature-help",
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
-    "hrsh7th/cmp-nvim-lua", -- For writing lua neovim specific
-    "hrsh7th/cmp-nvim-lsp", -- LSP source for nvim-cmp
+    "hrsh7th/cmp-nvim-lua",
+    "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-cmdline",
 
     {
@@ -86,11 +84,7 @@ require("lazy").setup({
             vim.o.timeout = true
             vim.o.timeoutlen = 300
         end,
-        opts = {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-        },
+        opts = {},
     },
 
     {
