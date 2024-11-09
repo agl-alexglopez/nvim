@@ -14,6 +14,7 @@ require("tokyonight").setup({
 	},
 	lualine_bold = true, -- When `true`, section headers in the lualine theme will be bold
 })
+
 vim.cmd([[colorscheme tokyonight]])
 
 require("noice").setup({
@@ -180,9 +181,13 @@ local on_attach = function(_, bufnr)
 end
 
 -- Massively simplified this section. Servers now at least work. Add to as needed.
+
 require("mason").setup({})
+
 require("mason-lspconfig").setup({})
+
 local lsp_config = require("lspconfig")
+
 -- Setup lspconfig. Other setups and options could precede these commands.
 vim.filetype.add({
 	extension = {
@@ -197,13 +202,27 @@ vim.filetype.add({
 		h = "c",
 	},
 })
+
 lsp_config.clangd.setup({
 	filetypes = { "c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx" },
 	capabilities = capabilities,
 	on_attach = on_attach,
 })
+
+lsp_config.lua_ls.setup({
+	settings = {
+		Lua = {
+			diagnostics = {
+				globals = { "vim", "capabilities" },
+			},
+		},
+	},
+})
+
 lsp_config.pyright.setup({})
+
 lsp_config.marksman.setup({})
+
 lsp_config.rust_analyzer.setup({
 	capabilities = capabilities,
 	on_attach = on_attach,
