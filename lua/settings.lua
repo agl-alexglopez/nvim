@@ -32,12 +32,12 @@ vim.opt.expandtab = true
 -- vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
 -- 2 spaces for select filetypes
 vim.cmd([[
-  autocmd FileType xml,html,xhtml,css,scss,javascript,yaml setlocal shiftwidth=2 tabstop=2 shiftwidth=2
+    autocmd FileType xml,html,xhtml,css,scss,javascript,yaml setlocal shiftwidth=2 tabstop=2 shiftwidth=2
 ]])
 
 -- 4 spaces for select filetypes
 vim.cmd([[
-  autocmd FileType c,cc,cpp,cx,cxx,h,hh,hpp,hx,hxx,lua setlocal softtabstop=4 tabstop=4 shiftwidth=4
+    autocmd FileType c,cc,cpp,cx,cxx,h,hh,hpp,hx,hxx,lua setlocal softtabstop=4 tabstop=4 shiftwidth=4
 ]])
 
 -- Sidebar
@@ -68,7 +68,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- Terminal for a convenient right split.
 -- open a terminal pane on the right using :Term
-vim.cmd([[command Term :botright vsplit term://$SHELL]])
+vim.cmd([[
+    command Term :botright vsplit term://$SHELL
+]])
 -- Terminal visual tweaks
 --- enter insert mode when switching to terminal
 --- close terminal buffer on process exit
@@ -79,7 +81,9 @@ vim.cmd([[
 ]])
 
 -- auto formatting
-vim.cmd([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
+vim.cmd([[
+    autocmd BufWritePre <buffer> lua vim.lsp.buf.format()
+]])
 
 -- Theme
 vim.opt.termguicolors = true
