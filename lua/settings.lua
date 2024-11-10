@@ -1,6 +1,8 @@
 -- Basics
 vim.opt.termguicolors = true
 vim.opt.encoding = "utf-8"
+vim.opt.spelllang = "en_us"
+vim.opt.spell = true
 -- backspace works on every char in insert mode
 vim.opt.backspace = "indent,eol,start"
 vim.opt.history = 1000
