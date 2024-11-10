@@ -1,18 +1,18 @@
 require("tokyonight").setup({
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    style = "moon", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
-    terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
+    -- storm, moon, night, day
+    style = "moon",
+    -- for :terminal
+    terminal_colors = true,
     styles = {
         -- Style to be applied to different syntax groups
         -- Value is any valid attr-list value for `:help nvim_set_hl`
         comments = { italic = false },
         keywords = { italic = false },
         -- Background styles. Can be "dark", "transparent" or "normal"
-        sidebars = "dark", -- style for sidebars, see below
-        floats = "dark", -- style for floating windows
+        sidebars = "dark",
+        floats = "dark",
     },
-    lualine_bold = true, -- When `true`, section headers in the lualine theme will be bold
+    lualine_bold = true,
 })
 
 vim.cmd([[colorscheme tokyonight]])
@@ -23,16 +23,22 @@ require("noice").setup({
         override = {
             ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
             ["vim.lsp.util.stylize_markdown"] = true,
-            ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+            -- requires hrsh7th/nvim-cmp
+            ["cmp.entry.get_documentation"] = true,
         },
     },
     -- you can enable a preset for easier configuration
     presets = {
-        bottom_search = true, -- use a classic bottom cmdline for search
-        command_palette = true, -- position the cmdline and popupmenu together
-        long_message_to_split = true, -- long messages will be sent to a split
-        inc_rename = false, -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = false, -- add a border to hover docs and signature help
+        -- use a classic bottom cmdline for search
+        bottom_search = true,
+        -- position the cmdline and popupmenu together
+        command_palette = true,
+        -- long messages will be sent to a split
+        long_message_to_split = true,
+        -- enables an input dialog for inc-rename.nvim
+        inc_rename = false,
+        -- add a border to hover docs and signature help
+        lsp_doc_border = false,
     },
 })
 
@@ -69,11 +75,12 @@ require("telescope").setup({
     },
     extensions = {
         fzf = {
-            fuzzy = true, -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true, -- override the file sorter
-            case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-            -- the default case_mode is "smart_case"
+            -- flase is exact match
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            -- "smart_case", "ignore_case", or "respect_case"
+            case_mode = "smart_case",
         },
     },
 })
@@ -127,9 +134,9 @@ require("nvim-treesitter.configs").setup({
 require("nvim-autopairs").setup({
     check_ts = true,
     ts_config = {
-        lua = { "string" }, -- it will not add a pair on that treesitter node
+        -- it will not add a pair on that treesitter node
+        lua = { "string" },
         javascript = { "template_string" },
-        java = false, -- don't check treesitter on java
     },
 })
 
@@ -261,10 +268,7 @@ cmp.setup({
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-e>"] = cmp.mapping.abort(),
         ["<C-Space>"] = cmp.mapping.complete(),
-        ["<CR>"] = cmp.mapping.confirm({ -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-            behavior = cmp.ConfirmBehavior.Insert,
-            select = true,
-        }),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
     }),
     sources = cmp.config.sources({
         { name = "path" },
@@ -275,15 +279,6 @@ cmp.setup({
         { name = "luasnip" }, -- For luasnip users.
         -- { name = 'ultisnips' }, -- For ultisnips users.
         -- { name = 'snippy' }, -- For snippy users.
-    }, {
-        { name = "buffer", keyword_length = 3 },
-    }),
-})
-
--- Set configuration for specific filetype.
-cmp.setup.filetype("gitcommit", {
-    sources = cmp.config.sources({
-        { name = "cmp_git" }, -- You can specify the `cmp_git` source if you were installed it.
     }, {
         { name = "buffer", keyword_length = 3 },
     }),

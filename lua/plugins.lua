@@ -6,7 +6,7 @@ if not vim.loop.fs_stat(lazypath) then
         "clone",
         "--filter=blob:none",
         "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
+        "--branch=stable",
         lazypath,
     })
 end
@@ -92,5 +92,11 @@ require("lazy").setup({
         dependencies = { "kyazdani42/nvim-web-devicons", opt = true },
     },
 
-    "windwp/nvim-autopairs",
+    {
+        "windwp/nvim-autopairs",
+        event = "InsertEnter",
+        config = true,
+        -- use opts = {} for passing setup options
+        -- this is equivalent to setup({}) function
+    },
 })
