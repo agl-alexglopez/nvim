@@ -12,7 +12,7 @@ vim.opt.clipboard = "unnamedplus"
 -- relative numbers can be slower for larger files
 --vim.opt.relativenumber = true
 -- don't auto commenting new lines n.b. turning off for now to see if I like auto commenting.
--- vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
+--vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
 
 -- GUI
 vim.opt.showmatch = true
@@ -24,23 +24,14 @@ vim.opt.colorcolumn = "80"
 vim.api.nvim_set_keymap("i", "<C-j>", "<Esc>", {})
 vim.api.nvim_set_keymap("t", "<C-j>", "<C-\\><C-N>", {})
 
--- Tabs Spaces White Char
+-- Ok defaults but try to ensure .editorconfig file in all projects.
 vim.opt.autoindent = true
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 -- remove whitespace on save
--- vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
--- 2 spaces for select filetypes
-vim.cmd([[
-    autocmd FileType xml,html,xhtml,css,scss,javascript,yaml setlocal shiftwidth=2 tabstop=2 shiftwidth=2
-]])
-
--- 4 spaces for select filetypes
-vim.cmd([[
-    autocmd FileType c,cc,cpp,cx,cxx,h,hh,hpp,hx,hxx,lua setlocal softtabstop=4 tabstop=4 shiftwidth=4
-]])
+--vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
 
 -- Sidebar
 vim.opt.number = true
