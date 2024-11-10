@@ -19,7 +19,7 @@ vim.cmd([[colorscheme tokyonight]])
 
 require("noice").setup({
     lsp = {
-        -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+        -- override markdown rendering so that cmp and other plugins use Treesitter
         override = {
             ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
             ["vim.lsp.util.stylize_markdown"] = true,
@@ -78,7 +78,7 @@ require("telescope").setup({
     },
     extensions = {
         fzf = {
-            -- flase is exact match
+            -- false is exact match
             fuzzy = true,
             override_generic_sorter = true,
             override_file_sorter = true,
@@ -143,51 +143,79 @@ require("nvim-autopairs").setup({
     },
 })
 
--- ---------------------------completions and lsp----------
+-- Completions and LSP
 
--- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
+--  Currently, things like git integration are though of as part of an
+--  LSP because they operate on a project with a well structure git folder.
 local on_attach = function(_, bufnr)
-    -- NOTE: Remember that lua is a real programming language, and as such it is possible
-    -- to define small helper and utility functions so you don't have to repeat yourself
-    -- many times.
-    --
-    -- In this case, we create a function that lets us more easily define mappings specific
-    -- for LSP related items. It sets the mode, buffer and description for us each time.
-    local nmap = function(keys, func, desc)
-        if desc then
-            desc = "LSP: " .. desc
-        end
-
-        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+    local gitsigns = require("gitsigns")
+    local function map(mode, l, r, desc)
+        desc = desc or ""
+        vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
     end
-
-    nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-    nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-
-    nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-    nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-    nmap("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-    nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
-    nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-    nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
-
-    -- See `:help K` for why this keymap
-    nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-    nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
-
+    -- Git Signs setups.
+    map("n", "]c", function()
+        if vim.wo.diff then
+            vim.cmd.normal({ "]c", bang = true })
+        else
+            gitsigns.nav_hunk("next")
+        end
+    end)
+    map("n", "[c", function()
+        if vim.wo.diff then
+            vim.cmd.normal({ "[c", bang = true })
+        else
+            gitsigns.nav_hunk("prev")
+        end
+    end)
+    -- Git Signs Actions
+    map("n", "<leader>hs", gitsigns.stage_hunk, "Git: [h]unk [s]tage")
+    map("n", "<leader>hr", gitsigns.reset_hunk, "Git: [h]unk [r]eset")
+    map("v", "<leader>hs", function()
+        gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+    end, "Git: [h]unk [s]tage")
+    map("v", "<leader>hr", function()
+        gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+    end, "Git: [h]unk [r]eset")
+    map("n", "<leader>hS", gitsigns.stage_buffer, "Git: [h]unk [S]tage_buffer")
+    map("n", "<leader>hu", gitsigns.undo_stage_hunk, "Git: [h]unk [u]ndo stage hunk")
+    map("n", "<leader>hR", gitsigns.reset_buffer, "Git: [h]unk [R]eset buffer")
+    map("n", "<leader>hp", gitsigns.preview_hunk, "Git: [h]unk [p]review")
+    map("n", "<leader>hb", function()
+        gitsigns.blame_line({ full = true })
+    end, "Git: [h]unk [b]lame line")
+    map("n", "<leader>tb", gitsigns.toggle_current_line_blame, "Git: [t]oggle current line [b]lame")
+    map("n", "<leader>hd", gitsigns.diffthis, "Git: [h]unk [d]iff")
+    map("n", "<leader>hD", function()
+        gitsigns.diffthis("~")
+    end, "Git: [h]unk [D]iff~")
+    map("n", "<leader>td", gitsigns.toggle_deleted, "Git: [t]oggle [d]eleted")
+    -- Text object
+    map({ "o", "x" }, "ih", ":<C-U>Git select_hunk<CR>")
+    -- LSP Actions
+    map("n", "<leader>rn", vim.lsp.buf.rename, "LSP: [r]e[n]ame")
+    map("n", "<leader>ca", vim.lsp.buf.code_action, "LSP: [c]ode [a]ction")
+    map("n", "gd", vim.lsp.buf.definition, "LSP: [g]oto [d]efinition")
+    map("n", "gr", require("telescope.builtin").lsp_references, "LSP: [g]oto [r]eferences")
+    map("n", "gI", require("telescope.builtin").lsp_implementations, "LSP: [g]oto [I]mplementation")
+    map("n", "<leader>D", vim.lsp.buf.type_definition, "type [D]efinition")
+    map("n", "<leader>ds", require("telescope.builtin").lsp_document_symbols, "LSP: [d]ocument [s]ymbols")
+    map("n", "<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "LSP: [w]orkspace [s]ymbols")
+    -- See `:help K` for why this key mapping
+    map("n", "K", vim.lsp.buf.hover, "hover documentation")
+    map("n", "<C-k>", vim.lsp.buf.signature_help, "signature documentation")
     -- Lesser used LSP functionality
-    nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-    nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
-    nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
-    nmap("<leader>wl", function()
+    map("n", "gD", vim.lsp.buf.declaration, "LSP: [g]oto [D]eclaration")
+    map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, "LSP: [w]orkspace [a]dd folder")
+    map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, "LSP: [w]orkspace [r]emove folder")
+    map("n", "<leader>wl", function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, "[W]orkspace [L]ist Folders")
-
+    end, "LSP: [w]orkspace [l]ist folders")
     -- Create a command `:Format` local to the LSP buffer
     vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
         vim.lsp.buf.format()
-    end, { desc = "Format current buffer with LSP" })
+    end, { desc = "format current buffer with LSP" })
 end
 
 -- Massively simplified this section. Servers now at least work. Add to as needed.
@@ -227,11 +255,16 @@ lsp_config.lua_ls.setup({
             },
         },
     },
+    on_attach = on_attach,
 })
 
-lsp_config.pyright.setup({})
+lsp_config.pyright.setup({
+    on_attach = on_attach,
+})
 
-lsp_config.marksman.setup({})
+lsp_config.marksman.setup({
+    on_attach = on_attach,
+})
 
 lsp_config.rust_analyzer.setup({
     capabilities = capabilities,
@@ -304,5 +337,3 @@ cmp.setup.cmdline(":", {
         { name = "cmdline", keyword_length = 3 },
     }),
 })
-
--- Luasnip setup

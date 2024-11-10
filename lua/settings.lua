@@ -88,11 +88,11 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- document existing key chains
 require("which-key").add({
-    { "<leader>c", group = "[C]ode" },
-    { "<leader>d", group = "[D]ocument" },
-    { "<leader>g", group = "[G]it" },
-    { "<leader>h", group = "More git" },
-    { "<leader>r", group = "[R]ename" },
-    { "<leader>s", group = "[S]earch" },
-    { "<leader>w", group = "[W]orkspace" },
+    { "<leader>c", group = "[c]ode" },
+    { "<leader>d", group = "[d]ocument" },
+    { "<leader>g", group = "[g]it" },
+    { "<leader>h", group = "[h]unk git" },
+    { "<leader>r", group = "[r]ename" },
+    { "<leader>s", group = "[s]earch" },
+    { "<leader>w", group = "[w]orkspace" },
 })
