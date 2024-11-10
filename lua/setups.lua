@@ -49,6 +49,9 @@ require("lualine").setup({
     },
 })
 
+-- For git editor integration.
+require("gitsigns").setup({})
+
 require("telescope").setup({
     defaults = {
         -- Default configuration for telescope goes here:

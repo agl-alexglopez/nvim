@@ -23,3 +23,5 @@ swappable
 LHS
 RHS
 void
+nvim
+config
