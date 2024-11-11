@@ -70,7 +70,7 @@ vim.cmd([[
 --- enter insert mode when switching to terminal
 --- close terminal buffer on process exit
 vim.cmd([[
-    autocmd TermOpen * setlocal listchars= nonumber norelativenumber nocursorline
+    autocmd TermOpen * setlocal listchars= nonumber norelativenumber nocursorline nospell
     autocmd TermOpen * startinsert
     autocmd BufLeave term://* stopinsert
 ]])

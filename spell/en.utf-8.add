@@ -26,3 +26,5 @@ void
 nvim
 config
 LSP
+runtime
+initializer
