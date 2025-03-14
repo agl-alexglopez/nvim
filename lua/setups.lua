@@ -337,3 +337,5 @@ cmp.setup.cmdline(":", {
         { name = "cmdline", keyword_length = 3 },
     }),
 })
+
+require("oil").setup()
