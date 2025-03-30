@@ -17,31 +17,6 @@ require("tokyonight").setup({
 
 vim.cmd([[colorscheme tokyonight]])
 
-require("noice").setup({
-    lsp = {
-        -- override markdown rendering so that cmp and other plugins use Treesitter
-        override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-            ["vim.lsp.util.stylize_markdown"] = true,
-            -- requires hrsh7th/nvim-cmp
-            ["cmp.entry.get_documentation"] = true,
-        },
-    },
-    -- you can enable a preset for easier configuration
-    presets = {
-        -- use a classic bottom cmdline for search
-        bottom_search = true,
-        -- position the cmdline and popupmenu together
-        command_palette = true,
-        -- long messages will be sent to a split
-        long_message_to_split = true,
-        -- enables an input dialog for inc-rename.nvim
-        inc_rename = false,
-        -- add a border to hover docs and signature help
-        lsp_doc_border = false,
-    },
-})
-
 -- The info bar at the bottom of the editor.
 require("lualine").setup({
     options = {
@@ -110,7 +85,7 @@ vim.keymap.set("n", "<leader>sr", require("telescope.builtin").resume, { desc = 
 
 require("nvim-treesitter.configs").setup({
     -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-    ensure_installed = { "python", "cpp", "c", "markdown", "lua", "rust" },
+    ensure_installed = { "python", "cpp", "c", "markdown", "lua", "rust", "vim" },
 
     -- Install languages synchronously (only applied to `ensure_installed`)
     sync_install = false,
@@ -148,6 +123,10 @@ require("nvim-autopairs").setup({
 --  This function gets run when an LSP connects to a particular buffer.
 --  Currently, things like git integration are though of as part of an
 --  LSP because they operate on a project with a well structure git folder.
+--  TODO: Consider how this function will work if a nvim/lsp/ folder is
+--  idiomatic. How would you get each lsp file to attach this function?
+--  For now just initialize all lsp's in this file with on_attach as
+--  global function.
 local on_attach = function(_, bufnr)
     local gitsigns = require("gitsigns")
     local function map(mode, l, r, desc)
@@ -218,13 +197,7 @@ local on_attach = function(_, bufnr)
     end, { desc = "format current buffer with LSP" })
 end
 
--- Massively simplified this section. Servers now at least work. Add to as needed.
-
 require("mason").setup({})
-
-require("mason-lspconfig").setup({})
-
-local lsp_config = require("lspconfig")
 
 -- Setup lspconfig. Other setups and options could precede these commands.
 vim.filetype.add({
@@ -241,13 +214,19 @@ vim.filetype.add({
     },
 })
 
-lsp_config.clangd.setup({
+vim.lsp.config["clangd"] = {
+    cmd = { "clangd", "--background-index", "--clang-tidy" },
+    root_markers = { "compile_commands.json", "compile_flags.txt" },
     filetypes = { "c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx" },
     capabilities = capabilities,
     on_attach = on_attach,
-})
+}
+vim.lsp.enable("clangd")
 
-lsp_config.lua_ls.setup({
+vim.lsp.config["lua-language-server"] = {
+    cmd = { "lua-language-server" },
+    root_markers = { ".luarc.json" },
+    filetypes = { "lua" },
     settings = {
         Lua = {
             diagnostics = {
@@ -256,86 +235,60 @@ lsp_config.lua_ls.setup({
         },
     },
     on_attach = on_attach,
-})
+}
+vim.lsp.enable("lua-language-server")
 
-lsp_config.pyright.setup({
+vim.lsp.config["marksman"] = {
+    cmd = { "marksman" },
+    root_markers = { ".editorconfig" },
+    filetypes = { "md", "markdown" },
     on_attach = on_attach,
-})
+}
+vim.lsp.enable("marksman")
 
-lsp_config.marksman.setup({
-    on_attach = on_attach,
-})
-
-lsp_config.rust_analyzer.setup({
+vim.lsp.config["rust-analyzer"] = {
+    cmd = { "rust-analyzer" },
+    root_markers = { "Cargo.toml" },
+    filetypes = { "rust", "rs" },
     capabilities = capabilities,
     on_attach = on_attach,
-    cmd = { "rustup", "run", "stable", "rust-analyzer" },
+}
+vim.lsp.enable("rust-analyzer")
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client:supports_method("textDocument/completion") then
+            client.server_capabilities.completionProvider.triggerCharacters =
+                vim.split("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM. ", "")
+            vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+        end
+        -- Auto-format ("lint") on save.
+        -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
+        if
+            not client:supports_method("textDocument/willSaveWaitUntil")
+            and client:supports_method("textDocument/formatting")
+        then
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                group = vim.api.nvim_create_augroup("my.lsp", { clear = false }),
+                buffer = args.buf,
+                callback = function()
+                    vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
+                end,
+            })
+        end
+    end,
 })
 
--- Setup nvim-cmp.
-local cmp = require("cmp")
+vim.diagnostic.config({
+    -- Use the default configuration
+    -- virtual_lines = true
 
-cmp.setup({
-    snippet = {
-        -- REQUIRED - you must specify a snippet engine
-        expand = function(args)
-            -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-            require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
-            -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-            -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-        end,
+    -- Alternatively, customize specific options
+    virtual_lines = {
+        --  -- Only show virtual line diagnostics for the current cursor line
+        current_line = true,
     },
-    -- Adds nice highlight to first option in the autocomplete menu.
-    completion = { completeopt = "menu,menuone,noinsert" },
-    -- Visual border for autocomplete opts.
-    window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-    },
-    experimental = {
-        native_menu = false,
-        ghost_text = true,
-    },
-    view = {
-        entries = { name = "custom", selection_order = "near_cursor" },
-    },
-    mapping = cmp.mapping.preset.insert({
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-e>"] = cmp.mapping.abort(),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<CR>"] = cmp.mapping.confirm({ select = true }),
-    }),
-    sources = cmp.config.sources({
-        { name = "path" },
-        { name = "nvim_lsp" },
-        { name = "nvim_lua" },
-        { name = "nvim_lsp_signature_help" },
-        -- { name = 'vsnip' }, -- For vsnip users.
-        { name = "luasnip" }, -- For luasnip users.
-        -- { name = 'ultisnips' }, -- For ultisnips users.
-        -- { name = 'snippy' }, -- For snippy users.
-    }, {
-        { name = "buffer", keyword_length = 3 },
-    }),
-})
-
--- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline("/", {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-        { name = "buffer", keyword_length = 3 },
-    },
-})
-
--- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline(":", {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = "path" },
-    }, {
-        { name = "cmdline", keyword_length = 3 },
-    }),
 })
 
 require("oil").setup()

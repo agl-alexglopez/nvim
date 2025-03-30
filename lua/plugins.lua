@@ -28,31 +28,11 @@ require("lazy").setup({
         opts = {},
     },
 
-    {
-        "folke/noice.nvim",
-        event = "VeryLazy",
-        opts = {},
-        dependencies = {
-            -- If Lazy load -> add proper `module="..."` entries
-            "MunifTanjim/nui.nvim",
-            -- OPTIONAL:
-            --   `nvim-notify` is only needed, if you want to use the notification view.
-            --   We use `mini` as the fallback
-            "rcarriga/nvim-notify",
-        },
-    },
-
     { "BurntSushi/ripgrep" },
 
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-    },
-
-    {
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        "neovim/nvim-lspconfig",
     },
 
     {
@@ -69,23 +49,9 @@ require("lazy").setup({
         dependencies = { { "nvim-lua/plenary.nvim" } },
     },
 
+    { "williamboman/mason.nvim" },
+
     { "L3MON4D3/LuaSnip" },
-
-    { "saadparwaiz1/cmp_luasnip" },
-
-    { "hrsh7th/nvim-cmp" },
-
-    { "hrsh7th/cmp-nvim-lsp-signature-help" },
-
-    { "hrsh7th/cmp-buffer" },
-
-    { "hrsh7th/cmp-path" },
-
-    { "hrsh7th/cmp-nvim-lua" },
-
-    { "hrsh7th/cmp-nvim-lsp" },
-
-    { "hrsh7th/cmp-cmdline" },
 
     { "lewis6991/gitsigns.nvim" },
 
