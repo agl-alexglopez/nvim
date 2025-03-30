@@ -226,13 +226,6 @@ vim.filetype.add({
     },
 })
 
-vim.lsp.config["clangd"] = {
-    cmd = { "clangd", "--background-index", "--clang-tidy" },
-    root_markers = { "compile_commands.json", "compile_flags.txt" },
-    filetypes = { "c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx" },
-}
-vim.lsp.enable("clangd")
-
 vim.lsp.config["lua-language-server"] = {
     cmd = { "lua-language-server" },
     root_markers = { ".luarc.json" },
@@ -245,21 +238,25 @@ vim.lsp.config["lua-language-server"] = {
         },
     },
 }
-vim.lsp.enable("lua-language-server")
 
-vim.lsp.config["marksman"] = {
-    cmd = { "marksman" },
-    root_markers = { ".editorconfig" },
-    filetypes = { "md", "markdown" },
+vim.lsp.config["clangd"] = {
+    cmd = { "clangd", "--background-index", "--clang-tidy" },
+    root_markers = { "compile_commands.json", "compile_flags.txt" },
+    filetypes = { "c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx" },
 }
-vim.lsp.enable("marksman")
 
 vim.lsp.config["rust-analyzer"] = {
     cmd = { "rust-analyzer" },
     root_markers = { "Cargo.toml" },
     filetypes = { "rust", "rs" },
 }
-vim.lsp.enable("rust-analyzer")
+vim.lsp.config["marksman"] = {
+    cmd = { "marksman" },
+    root_markers = { ".editorconfig" },
+    filetypes = { "md", "markdown" },
+}
+
+vim.lsp.enable({ "lua-language-server", "clangd", "rust-analyzer", "marksman" })
 
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
@@ -350,6 +347,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
+-- When LSP's detect errors determine how they are displayed.
 vim.diagnostic.config({
     -- Use the default configuration
     -- virtual_lines = true
