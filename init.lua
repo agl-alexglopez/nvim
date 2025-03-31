@@ -1,4 +1,5 @@
 -- plugins {{{1
+
 -- Install lazy if not installed to prevent plugin errors on new nvim config.
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -52,8 +53,6 @@ require("lazy").setup({
 
     { "williamboman/mason.nvim" },
 
-    { "L3MON4D3/LuaSnip" },
-
     { "lewis6991/gitsigns.nvim" },
 
     {
@@ -78,6 +77,7 @@ require("lazy").setup({
         -- use opts = {} for passing setup options
         -- this is equivalent to setup({}) function
     },
+
     {
         "stevearc/oil.nvim",
         ---@module 'oil'
@@ -88,7 +88,9 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
     },
 })
+
 -- setups {{{1
+
 require("tokyonight").setup({
     -- storm, moon, night, day
     style = "moon",
@@ -250,6 +252,7 @@ vim.lsp.config["rust-analyzer"] = {
     root_markers = { "Cargo.toml" },
     filetypes = { "rust", "rs" },
 }
+
 vim.lsp.config["marksman"] = {
     cmd = { "marksman" },
     root_markers = { ".editorconfig" },
@@ -361,7 +364,9 @@ vim.diagnostic.config({
 
 -- Open directories as buffers to edit files and folders in nvim.
 require("oil").setup()
+
 -- core settings {{{1
+
 -- Basics
 vim.opt.termguicolors = true
 vim.opt.encoding = "utf-8"
