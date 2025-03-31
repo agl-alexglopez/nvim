@@ -350,17 +350,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
--- When LSP's detect errors determine how they are displayed.
-vim.diagnostic.config({
-    -- Use the default configuration
-    -- virtual_lines = true
+-- A little function to switch how to show diagnostics
+local default_config = { virtual_lines = { current_line = true } }
+vim.diagnostic.config(default_config)
 
-    -- Alternatively, customize specific options
-    virtual_lines = {
-        --  -- Only show virtual line diagnostics for the current cursor line
-        current_line = true,
-    },
-})
+vim.keymap.set("n", "<leader>e", function()
+    -- virtual_lines is either a table or true/false, let's just check for the
+    -- boolean value.
+    if vim.diagnostic.config().virtual_lines == true then
+        vim.diagnostic.config(default_config)
+    else
+        vim.diagnostic.config({ virtual_lines = true })
+    end
+end, { desc = "[e] toggle all errors or current line errors" })
 
 -- Open directories as buffers to edit files and folders in nvim.
 require("oil").setup()
