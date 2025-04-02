@@ -213,7 +213,6 @@ require("nvim-autopairs").setup({
 
 require("mason").setup({})
 
--- Setup lspconfig. Other setups and options could precede these commands.
 vim.filetype.add({
     extension = {
         cpp = "cpp",
@@ -225,6 +224,17 @@ vim.filetype.add({
         hx = "cpp",
         c = "c",
         h = "c",
+    },
+})
+
+vim.lsp.config("*", {
+    root_markers = { ".git" },
+    capabilities = {
+        textDocument = {
+            semanticTokens = {
+                multilineTokenSupport = true,
+            },
+        },
     },
 })
 
@@ -243,7 +253,7 @@ vim.lsp.config["lua-language-server"] = {
 
 vim.lsp.config["clangd"] = {
     cmd = { "clangd", "--background-index", "--clang-tidy" },
-    root_markers = { "compile_commands.json", "compile_flags.txt" },
+    root_markers = { ".clangd", "compile_commands.json", "compile_flags.txt" },
     filetypes = { "c", "h", "cpp", "hpp", "hx", "hh", "cxx", "cc", "cx" },
 }
 
@@ -255,7 +265,6 @@ vim.lsp.config["rust-analyzer"] = {
 
 vim.lsp.config["marksman"] = {
     cmd = { "marksman" },
-    root_markers = { ".editorconfig" },
     filetypes = { "md", "markdown" },
 }
 
