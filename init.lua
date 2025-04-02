@@ -272,7 +272,7 @@ vim.lsp.enable({ "lua-language-server", "clangd", "rust-analyzer", "marksman" })
 
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
         if client:supports_method("textDocument/completion") then
             client.server_capabilities.completionProvider.triggerCharacters =
                 vim.split("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM. ", "")
@@ -397,6 +397,7 @@ vim.opt.clipboard = "unnamedplus"
 --vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
 
 -- GUI
+vim.o.winborder = "rounded"
 vim.opt.showmatch = true
 vim.opt.laststatus = 2
 vim.opt.wrap = true
