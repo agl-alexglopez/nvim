@@ -275,7 +275,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
         if client:supports_method("textDocument/completion") then
             client.server_capabilities.completionProvider.triggerCharacters =
-                vim.split("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM. ", "")
+                vim.split("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM.> ", "")
             vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
         end
         -- Auto-format ("lint") on save.
