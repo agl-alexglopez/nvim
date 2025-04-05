@@ -38,17 +38,12 @@ require("lazy").setup({
     },
 
     {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = [[
-        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build
-        ]],
-    },
-
-    {
-        "nvim-telescope/telescope.nvim",
-        --or tag = '0.1.CHOOSE_LATEST_TAG_FROM_REPO'
-        branch = "0.1.x",
-        dependencies = { { "nvim-lua/plenary.nvim" } },
+        "ibhagwan/fzf-lua",
+        -- optional for icon support
+        dependencies = { "junegunn/fzf", "nvim-tree/nvim-web-devicons" },
+        -- or if using mini.icons/mini.nvim
+        -- dependencies = { "echasnovski/mini.icons" },
+        opts = {},
     },
 
     { "williamboman/mason.nvim" },
@@ -120,61 +115,18 @@ require("lualine").setup({
 -- For git editor integration.
 require("gitsigns").setup({})
 
-require("telescope").setup({
-    defaults = {
-        -- Default configuration for telescope goes here:
-        -- config_key = value,
-        mappings = {
-            i = {
-                -- map actions.which_key to <C-h> (default: <C-/>)
-                -- actions.which_key shows the mappings for your picker,
-                -- e.g. git_{create, delete, ...}_branch for the git_branches picker
-                ["<C-h>"] = "which_key",
-                ["<C-u>"] = false,
-                ["<C-d>"] = false,
-            },
-        },
-    },
-    pickers = {
-        -- Default configuration for builtin pickers goes here:
-        -- picker_name = {
-        --   picker_config_key = value,
-        --   ...
-        -- }
-        -- Now the picker_config_key will be applied every time you call this
-        -- builtin picker
-    },
-    extensions = {
-        fzf = {
-            -- false is exact match
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            -- "smart_case", "ignore_case", or "respect_case"
-            case_mode = "smart_case",
-        },
-    },
-})
-
-require("telescope").load_extension("fzf")
--- See `:help telescope.builtin`
-vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
-vim.keymap.set("n", "<leader><space>", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
-vim.keymap.set("n", "<leader>/", function()
-    -- You can pass additional configuration to telescope to change theme, layout, etc.
-    require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-        winblend = 10,
-        previewer = false,
-    }))
-end, { desc = "[/] Fuzzily search in current buffer" })
-
-vim.keymap.set("n", "<leader>gf", require("telescope.builtin").git_files, { desc = "Search [G]it [F]iles" })
-vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
-vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sw", require("telescope.builtin").grep_string, { desc = "[S]earch current [W]ord" })
-vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "[S]earch by [G]rep" })
-vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics, { desc = "[S]earch [D]iagnostics" })
-vim.keymap.set("n", "<leader>sr", require("telescope.builtin").resume, { desc = "[S]earch [R]esume" })
+require("fzf-lua").setup({})
+vim.keymap.set("n", "<leader>?", require("fzf-lua").oldfiles, { desc = "[?] Find recently opened files" })
+vim.keymap.set("n", "<leader><space>", require("fzf-lua").buffers, { desc = "[ ] Find existing buffers" })
+vim.keymap.set("n", "<leader>/", require("fzf-lua").lgrep_curbuf, { desc = "[/] Live grep current buffer" })
+vim.keymap.set("n", "<leader>gf", require("fzf-lua").git_files, { desc = "Search [G]it [F]iles" })
+vim.keymap.set("n", "<leader>sf", require("fzf-lua").files, { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>sh", require("fzf-lua").help_tags, { desc = "[S]earch [H]elp" })
+vim.keymap.set("n", "<leader>sw", require("fzf-lua").grep_cword, { desc = "[S]earch current [W]ord" })
+vim.keymap.set("n", "<leader>sg", require("fzf-lua").live_grep, { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sd", require("fzf-lua").diagnostics_document, { desc = "[S]earch [D]iagnostics" })
+vim.keymap.set("n", "<leader>so", require("fzf-lua").lsp_references, { desc = "LSP: [S]earch [O]ccurences" })
+vim.keymap.set("n", "<leader>sr", require("fzf-lua").resume, { desc = "[S]earch [R]esume" })
 
 require("nvim-treesitter.configs").setup({
     -- One of "all", "maintained" (parsers with maintainers), or a list of languages
@@ -344,11 +296,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("n", "<leader>rn", vim.lsp.buf.rename, "LSP: [r]e[n]ame")
         map("n", "<leader>ca", vim.lsp.buf.code_action, "LSP: [c]ode [a]ction")
         map("n", "gd", vim.lsp.buf.definition, "LSP: [g]oto [d]efinition")
-        map("n", "gr", require("telescope.builtin").lsp_references, "LSP: [g]oto [r]eferences")
-        map("n", "gI", require("telescope.builtin").lsp_implementations, "LSP: [g]oto [I]mplementation")
+        map("n", "gI", require("fzf-lua").lsp_implementations, "LSP: [g]oto [I]mplementation")
+        map("n", "<leader>ds", require("fzf-lua").lsp_document_symbols, "LSP: [d]ocument [s]ymbols")
+        map("n", "<leader>ws", require("fzf-lua").lsp_workspace_symbols, "LSP: [w]orkspace [s]ymbols")
         map("n", "<leader>D", vim.lsp.buf.type_definition, "type [D]efinition")
-        map("n", "<leader>ds", require("telescope.builtin").lsp_document_symbols, "LSP: [d]ocument [s]ymbols")
-        map("n", "<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "LSP: [w]orkspace [s]ymbols")
         -- Lesser used LSP functionality
         map("n", "gD", vim.lsp.buf.declaration, "LSP: [g]oto [D]eclaration")
         map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, "LSP: [w]orkspace [a]dd folder")
