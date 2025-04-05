@@ -1,5 +1,87 @@
--- plugins {{{1
+-- Core Editor Settings {{{1
+-- Basics
+vim.opt.termguicolors = true
+vim.opt.encoding = "utf-8"
+vim.opt.spelllang = "en_us"
+vim.opt.spell = true
+-- backspace works on every char in insert mode
+vim.opt.backspace = "indent,eol,start"
+vim.opt.history = 1000
+vim.opt.startofline = true
+vim.opt.mouse = "a"
+vim.opt.swapfile = false
+vim.opt.completeopt = "menuone,noinsert,popup,fuzzy"
+vim.opt.clipboard = "unnamedplus"
+-- relative numbers can be slower for larger files
+--vim.opt.relativenumber = true
+-- don't auto commenting new lines n.b. turning off for now to see if I like auto commenting.
+--vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
 
+-- GUI
+vim.o.winborder = "rounded"
+vim.opt.showmatch = true
+vim.opt.laststatus = 2
+vim.opt.wrap = true
+vim.opt.colorcolumn = "80"
+
+--KeyMap
+vim.api.nvim_set_keymap("i", "<C-j>", "<Esc>", {})
+vim.api.nvim_set_keymap("t", "<C-j>", "<C-\\><C-N>", {})
+
+-- Ok defaults but try to ensure .editorconfig file in all projects.
+vim.opt.autoindent = true
+vim.opt.softtabstop = 4
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+-- remove whitespace on save
+--vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
+
+-- Sidebar
+vim.opt.number = true
+vim.opt.numberwidth = 3
+vim.opt.showcmd = true
+vim.opt.modelines = 0
+
+-- Search
+vim.opt.incsearch = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+-- Decrease update time
+vim.o.updatetime = 250
+vim.o.timeoutlen = 300
+
+-- [[ Highlight on yank ]]
+-- See `:help vim.highlight.on_yank()`
+local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+    group = highlight_group,
+    pattern = "*",
+})
+
+-- Terminal for a convenient right split.
+-- open a terminal pane on the right using :Term
+vim.cmd([[
+    command Term :botright vsplit term://$SHELL
+]])
+-- Terminal visual tweaks
+--- enter insert mode when switching to terminal
+--- close terminal buffer on process exit
+vim.cmd([[
+    autocmd TermOpen * setlocal listchars= nonumber norelativenumber nocursorline nospell
+    autocmd TermOpen * startinsert
+    autocmd BufLeave term://* stopinsert
+]])
+
+-- enable folding
+-- vim: foldmethod=marker foldlevel=0
+vim.opt.foldmethod = "marker"
+vim.opt.foldenable = true
+-- Lazy Plugin Management {{{1
 -- Install lazy if not installed to prevent plugin errors on new nvim config.
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -86,9 +168,8 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
     },
 })
-
--- setups {{{1
-
+-- Plugin Configuration {{{1
+-- tokyonight: Theme {{{2
 require("tokyonight").setup({
     -- storm, moon, night, day
     style = "moon",
@@ -105,19 +186,26 @@ require("tokyonight").setup({
     },
     lualine_bold = true,
 })
-
 vim.cmd([[colorscheme tokyonight]])
-
--- The info bar at the bottom of the editor.
+-- lualine: Bottom Bar {{{2
 require("lualine").setup({
     options = {
         theme = "tokyonight",
     },
 })
-
--- For git editor integration.
-require("gitsigns").setup({})
-
+-- which-key: Which Key? {{{2
+require("which-key").add({
+    { "<leader>c", group = "[c]ode" },
+    { "<leader>d", group = "[d]ocument" },
+    { "<leader>g", group = "[g]it" },
+    { "<leader>h", group = "[h]unk git" },
+    { "<leader>r", group = "[r]ename" },
+    { "<leader>s", group = "[s]earch" },
+    { "<leader>w", group = "[w]orkspace" },
+})
+-- oil: Directories are Buffers {{{2
+require("oil").setup()
+-- fzf-lua: Finding, Grepping, and Previews {{{2
 require("fzf-lua").setup({
     winopts = {
         preview = {
@@ -125,30 +213,77 @@ require("fzf-lua").setup({
         },
     },
 })
-
+local fzf_lua = require("fzf-lua")
 -- Files
-vim.keymap.set("n", "<leader>?", require("fzf-lua").oldfiles, { desc = "[?] Find recently opened files" })
-vim.keymap.set("n", "<leader><space>", require("fzf-lua").buffers, { desc = "[ ] Find existing buffers" })
-vim.keymap.set("n", "<leader>sf", require("fzf-lua").files, { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>?", fzf_lua.oldfiles, { desc = "[?] Find recently opened files" })
+vim.keymap.set("n", "<leader><space>", fzf_lua.buffers, { desc = "[ ] Find existing buffers" })
+vim.keymap.set("n", "<leader>sf", fzf_lua.files, { desc = "[S]earch [F]iles" })
 -- Grepping
-vim.keymap.set("n", "<leader>/", require("fzf-lua").lgrep_curbuf, { desc = "[/] Live grep current buffer" })
-vim.keymap.set("n", "<leader>sw", require("fzf-lua").grep_cword, { desc = "[S]earch [W]ord under cursor" })
-vim.keymap.set("n", "<leader>sg", require("fzf-lua").live_grep, { desc = "[S]earch by [G]rep" })
-vim.keymap.set("n", "<leader>sl", require("fzf-lua").live_grep_glob, { desc = "[S]earch by grep g[L]ob" })
-vim.keymap.set("n", "<leader>sp", require("fzf-lua").grep_project, { desc = "[S]earch [P]roject" })
-vim.keymap.set("v", "<leader>s", require("fzf-lua").grep_visual, { desc = "[S]earch [V]isual selection" })
+vim.keymap.set("n", "<leader>/", fzf_lua.lgrep_curbuf, { desc = "[/] Live grep current buffer" })
+vim.keymap.set("n", "<leader>sw", fzf_lua.grep_cword, { desc = "[S]earch [W]ord under cursor" })
+vim.keymap.set("n", "<leader>sg", fzf_lua.live_grep, { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sl", fzf_lua.live_grep_glob, { desc = "[S]earch by grep g[L]ob" })
+vim.keymap.set("n", "<leader>sp", fzf_lua.grep_project, { desc = "[S]earch [P]roject" })
+vim.keymap.set("v", "<leader>s", fzf_lua.grep_visual, { desc = "[S]earch [V]isual selection" })
 -- Git
-vim.keymap.set("n", "<leader>gf", require("fzf-lua").git_files, { desc = "Search [G]it [F]iles" })
-vim.keymap.set("n", "<leader>gc", require("fzf-lua").git_commits, { desc = "Search [G]it [C]ommits" })
-vim.keymap.set("n", "<leader>gb", require("fzf-lua").git_bcommits, { desc = "Search [G]it [B]uffer commits" })
+vim.keymap.set("n", "<leader>gf", fzf_lua.git_files, { desc = "Search [G]it [F]iles" })
+vim.keymap.set("n", "<leader>gc", fzf_lua.git_commits, { desc = "Search [G]it [C]ommits" })
+vim.keymap.set("n", "<leader>gb", fzf_lua.git_bcommits, { desc = "Search [G]it [B]uffer commits" })
 -- LSP
-vim.keymap.set("n", "<leader>sd", require("fzf-lua").diagnostics_document, { desc = "[S]earch [D]iagnostics" })
-vim.keymap.set("n", "<leader>so", require("fzf-lua").lsp_references, { desc = "LSP: [S]earch [O]ccurences" })
+vim.keymap.set("n", "<leader>sd", fzf_lua.diagnostics_document, { desc = "[S]earch [D]iagnostics" })
+vim.keymap.set("n", "<leader>so", fzf_lua.lsp_references, { desc = "LSP: [S]earch [O]ccurences" })
+vim.keymap.set("n", "<leader>ds", fzf_lua.lsp_document_symbols, { desc = "LSP: [d]ocument [s]ymbols" })
+vim.keymap.set("n", "<leader>ws", fzf_lua.lsp_workspace_symbols, { desc = "LSP: [w]orkspace [s]ymbols" })
+vim.keymap.set("n", "gI", fzf_lua.lsp_implementations, { desc = "LSP: [g]oto [I]mplementation" })
 -- Misc
-vim.keymap.set("n", "<leader>sb", require("fzf-lua").builtin, { desc = "[S]earch fzf-lua [B]uiltins" })
-vim.keymap.set("n", "<leader>sh", require("fzf-lua").help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sr", require("fzf-lua").resume, { desc = "[S]earch [R]esume" })
+vim.keymap.set("n", "<leader>sb", fzf_lua.builtin, { desc = "[S]earch fzf-lua [B]uiltins" })
+vim.keymap.set("n", "<leader>sh", fzf_lua.help_tags, { desc = "[S]earch [H]elp" })
+vim.keymap.set("n", "<leader>sr", fzf_lua.resume, { desc = "[S]earch [R]esume" })
 
+-- gitsigns: Navigating the Git Gutters {{{2
+require("gitsigns").setup({})
+local gitsigns = require("gitsigns")
+vim.keymap.set("n", "]c", function()
+    if vim.wo.diff then
+        vim.cmd.normal({ "]c", bang = true })
+    else
+        gitsigns.nav_hunk("next")
+    end
+end, { desc = "Git: [c] next hunk" })
+vim.keymap.set("n", "[c", function()
+    if vim.wo.diff then
+        vim.cmd.normal({ "[c", bang = true })
+    else
+        gitsigns.nav_hunk("prev")
+    end
+end, { desc = "Git: [c] prev hunk" })
+-- Git Signs Actions
+vim.keymap.set("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Git: [h]unk [s]tage" })
+vim.keymap.set("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Git: [h]unk [r]eset" })
+vim.keymap.set("v", "<leader>hs", function()
+    gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+end, { desc = "Git: [h]unk [s]tage" })
+vim.keymap.set("v", "<leader>hr", function()
+    gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+end, { desc = "Git: [h]unk [r]eset" })
+vim.keymap.set("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Git: [h]unk [S]tage_buffer" })
+vim.keymap.set("n", "<leader>hu", gitsigns.undo_stage_hunk, { desc = "Git: [h]unk [u]ndo stage hunk" })
+vim.keymap.set("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Git: [h]unk [R]eset buffer" })
+vim.keymap.set("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Git: [h]unk [p]review" })
+vim.keymap.set("n", "<leader>hb", function()
+    gitsigns.blame_line({ full = true })
+end, { desc = "Git: [h]unk [b]lame line" })
+vim.keymap.set("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Git: [t]oggle current line [b]lame" })
+vim.keymap.set("n", "<leader>hd", gitsigns.diffthis, { desc = "Git: [h]unk [d]iff" })
+vim.keymap.set("n", "<leader>hD", function()
+    gitsigns.diffthis("~")
+end, { desc = "Git: [h]unk [D]iff~" })
+vim.keymap.set("n", "<leader>td", gitsigns.toggle_deleted, { desc = "Git: [t]oggle [d]eleted" })
+-- Text object
+vim.keymap.set("o", "ih", gitsigns.select_hunk, { desc = "Git: operate on [i]nternal [h]unk" })
+vim.keymap.set("x", "ih", gitsigns.select_hunk, { desc = "Git: visual select [i]nternal [h]unk" })
+
+-- nvim-treesitter: Syntax Highlighting {{{2
 require("nvim-treesitter.configs").setup({
     -- One of "all", "maintained" (parsers with maintainers), or a list of languages
     ensure_installed = { "python", "cpp", "c", "markdown", "lua", "rust", "vim" },
@@ -173,8 +308,7 @@ require("nvim-treesitter.configs").setup({
         additional_vim_regex_highlighting = false,
     },
 })
-
--- Adds pair completions for brackets, quotes, parens, etc.
+-- nvim-autopairs: Autocomplete Symbol Pairs {{{2
 require("nvim-autopairs").setup({
     check_ts = true,
     ts_config = {
@@ -183,9 +317,9 @@ require("nvim-autopairs").setup({
         javascript = { "template_string" },
     },
 })
-
+-- mason: Manage LSP Servers via Neovim {{{2
 require("mason").setup({})
-
+-- vim.[lsp|api|diagnostic]: Native LSP Configuration {{{2
 vim.filetype.add({
     extension = {
         cpp = "cpp",
@@ -269,60 +403,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 vim.lsp.buf.format()
             end, { desc = "format current buffer with LSP" })
         end
-        -- Buffer and context specific git mappings and actions
-        local gitsigns = require("gitsigns")
         local function map(mode, l, r, desc)
             desc = desc or ""
             vim.keymap.set(mode, l, r, { buffer = args.buf, desc = desc })
         end
-        map("n", "]c", function()
-            if vim.wo.diff then
-                vim.cmd.normal({ "]c", bang = true })
-            else
-                gitsigns.nav_hunk("next")
-            end
-        end, "Git: [c] next hunk")
-        map("n", "[c", function()
-            if vim.wo.diff then
-                vim.cmd.normal({ "[c", bang = true })
-            else
-                gitsigns.nav_hunk("prev")
-            end
-        end, "Git: [c] prev hunk")
-        -- Git Signs Actions
-        map("n", "<leader>hs", gitsigns.stage_hunk, "Git: [h]unk [s]tage")
-        map("n", "<leader>hr", gitsigns.reset_hunk, "Git: [h]unk [r]eset")
-        map("v", "<leader>hs", function()
-            gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-        end, "Git: [h]unk [s]tage")
-        map("v", "<leader>hr", function()
-            gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-        end, "Git: [h]unk [r]eset")
-        map("n", "<leader>hS", gitsigns.stage_buffer, "Git: [h]unk [S]tage_buffer")
-        map("n", "<leader>hu", gitsigns.undo_stage_hunk, "Git: [h]unk [u]ndo stage hunk")
-        map("n", "<leader>hR", gitsigns.reset_buffer, "Git: [h]unk [R]eset buffer")
-        map("n", "<leader>hp", gitsigns.preview_hunk, "Git: [h]unk [p]review")
-        map("n", "<leader>hb", function()
-            gitsigns.blame_line({ full = true })
-        end, "Git: [h]unk [b]lame line")
-        map("n", "<leader>tb", gitsigns.toggle_current_line_blame, "Git: [t]oggle current line [b]lame")
-        map("n", "<leader>hd", gitsigns.diffthis, "Git: [h]unk [d]iff")
-        map("n", "<leader>hD", function()
-            gitsigns.diffthis("~")
-        end, "Git: [h]unk [D]iff~")
-        map("n", "<leader>td", gitsigns.toggle_deleted, "Git: [t]oggle [d]eleted")
-        -- Text object
-        map({ "o", "x" }, "ih", ":<C-U>Git select_hunk<CR>")
         -- LSP Actions
         map("n", "<leader>rn", vim.lsp.buf.rename, "LSP: [r]e[n]ame")
         map("n", "<leader>ca", vim.lsp.buf.code_action, "LSP: [c]ode [a]ction")
-        map("n", "gd", vim.lsp.buf.definition, "LSP: [g]oto [d]efinition")
-        map("n", "gI", require("fzf-lua").lsp_implementations, "LSP: [g]oto [I]mplementation")
-        map("n", "<leader>ds", require("fzf-lua").lsp_document_symbols, "LSP: [d]ocument [s]ymbols")
-        map("n", "<leader>ws", require("fzf-lua").lsp_workspace_symbols, "LSP: [w]orkspace [s]ymbols")
-        map("n", "<leader>D", vim.lsp.buf.type_definition, "type [D]efinition")
-        -- Lesser used LSP functionality
+        map("n", "<leader>D", vim.lsp.buf.type_definition, "type buffer [D]efinition")
+        map("n", "gd", vim.lsp.buf.definition, "LSP: [g]oto buffer [d]efinition")
         map("n", "gD", vim.lsp.buf.declaration, "LSP: [g]oto [D]eclaration")
+        -- Lesser used LSP functionality
         map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, "LSP: [w]orkspace [a]dd folder")
         map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, "LSP: [w]orkspace [r]emove folder")
         map("n", "<leader>wl", function()
@@ -344,104 +435,5 @@ vim.keymap.set("n", "<leader>e", function()
         vim.diagnostic.config({ virtual_lines = true })
     end
 end, { desc = "[e] toggle all errors or current line errors" })
-
--- Open directories as buffers to edit files and folders in nvim.
-require("oil").setup()
-
--- core settings {{{1
-
--- Basics
-vim.opt.termguicolors = true
-vim.opt.encoding = "utf-8"
-vim.opt.spelllang = "en_us"
-vim.opt.spell = true
--- backspace works on every char in insert mode
-vim.opt.backspace = "indent,eol,start"
-vim.opt.history = 1000
-vim.opt.startofline = true
-vim.opt.mouse = "a"
-vim.opt.swapfile = false
-vim.opt.completeopt = "menuone,noinsert,popup,fuzzy"
-vim.opt.clipboard = "unnamedplus"
--- relative numbers can be slower for larger files
---vim.opt.relativenumber = true
--- don't auto commenting new lines n.b. turning off for now to see if I like auto commenting.
---vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
-
--- GUI
-vim.o.winborder = "rounded"
-vim.opt.showmatch = true
-vim.opt.laststatus = 2
-vim.opt.wrap = true
-vim.opt.colorcolumn = "80"
-
---KeyMap
-vim.api.nvim_set_keymap("i", "<C-j>", "<Esc>", {})
-vim.api.nvim_set_keymap("t", "<C-j>", "<C-\\><C-N>", {})
-
--- Ok defaults but try to ensure .editorconfig file in all projects.
-vim.opt.autoindent = true
-vim.opt.softtabstop = 4
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
--- remove whitespace on save
---vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
-
--- Sidebar
-vim.opt.number = true
-vim.opt.numberwidth = 3
-vim.opt.showcmd = true
-vim.opt.modelines = 0
-
--- Search
-vim.opt.incsearch = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Decrease update time
-vim.o.updatetime = 250
-vim.o.timeoutlen = 300
-
--- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
-vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank()
-    end,
-    group = highlight_group,
-    pattern = "*",
-})
-
--- Terminal for a convenient right split.
--- open a terminal pane on the right using :Term
-vim.cmd([[
-    command Term :botright vsplit term://$SHELL
-]])
--- Terminal visual tweaks
---- enter insert mode when switching to terminal
---- close terminal buffer on process exit
-vim.cmd([[
-    autocmd TermOpen * setlocal listchars= nonumber norelativenumber nocursorline nospell
-    autocmd TermOpen * startinsert
-    autocmd BufLeave term://* stopinsert
-]])
-
--- Diagnostic keymaps
+-- Diagnostic keymap
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
-
--- document existing key chains
-require("which-key").add({
-    { "<leader>c", group = "[c]ode" },
-    { "<leader>d", group = "[d]ocument" },
-    { "<leader>g", group = "[g]it" },
-    { "<leader>h", group = "[h]unk git" },
-    { "<leader>r", group = "[r]ename" },
-    { "<leader>s", group = "[s]earch" },
-    { "<leader>w", group = "[w]orkspace" },
-})
--- enable folding
--- vim: foldmethod=marker foldlevel=0
-vim.opt.foldmethod = "marker"
-vim.opt.foldenable = true
