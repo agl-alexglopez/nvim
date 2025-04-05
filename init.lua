@@ -30,8 +30,6 @@ require("lazy").setup({
         opts = {},
     },
 
-    { "BurntSushi/ripgrep" },
-
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
@@ -40,7 +38,14 @@ require("lazy").setup({
     {
         "ibhagwan/fzf-lua",
         -- optional for icon support
-        dependencies = { "junegunn/fzf", "nvim-tree/nvim-web-devicons" },
+        dependencies = {
+            "junegunn/fzf",
+            "sharkdp/fd",
+            "sharkdp/bat",
+            "BurntSushi/ripgrep",
+            "MeanderingProgrammer/render-markdown.nvim",
+            "nvim-tree/nvim-web-devicons",
+        },
         -- or if using mini.icons/mini.nvim
         -- dependencies = { "echasnovski/mini.icons" },
         opts = {},
