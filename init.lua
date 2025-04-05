@@ -40,8 +40,6 @@ require("lazy").setup({
         -- optional for icon support
         dependencies = {
             "junegunn/fzf",
-            "sharkdp/fd",
-            "sharkdp/bat",
             "BurntSushi/ripgrep",
             "MeanderingProgrammer/render-markdown.nvim",
             "nvim-tree/nvim-web-devicons",
@@ -120,17 +118,35 @@ require("lualine").setup({
 -- For git editor integration.
 require("gitsigns").setup({})
 
-require("fzf-lua").setup({})
+require("fzf-lua").setup({
+    winopts = {
+        preview = {
+            default = "bat",
+        },
+    },
+})
+
+-- Files
 vim.keymap.set("n", "<leader>?", require("fzf-lua").oldfiles, { desc = "[?] Find recently opened files" })
 vim.keymap.set("n", "<leader><space>", require("fzf-lua").buffers, { desc = "[ ] Find existing buffers" })
-vim.keymap.set("n", "<leader>/", require("fzf-lua").lgrep_curbuf, { desc = "[/] Live grep current buffer" })
-vim.keymap.set("n", "<leader>gf", require("fzf-lua").git_files, { desc = "Search [G]it [F]iles" })
 vim.keymap.set("n", "<leader>sf", require("fzf-lua").files, { desc = "[S]earch [F]iles" })
-vim.keymap.set("n", "<leader>sh", require("fzf-lua").help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sw", require("fzf-lua").grep_cword, { desc = "[S]earch current [W]ord" })
+-- Grepping
+vim.keymap.set("n", "<leader>/", require("fzf-lua").lgrep_curbuf, { desc = "[/] Live grep current buffer" })
+vim.keymap.set("n", "<leader>sw", require("fzf-lua").grep_cword, { desc = "[S]earch [W]ord under cursor" })
 vim.keymap.set("n", "<leader>sg", require("fzf-lua").live_grep, { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sl", require("fzf-lua").live_grep_glob, { desc = "[S]earch by grep g[L]ob" })
+vim.keymap.set("n", "<leader>sp", require("fzf-lua").grep_project, { desc = "[S]earch [P]roject" })
+vim.keymap.set("v", "<leader>s", require("fzf-lua").grep_visual, { desc = "[S]earch [V]isual selection" })
+-- Git
+vim.keymap.set("n", "<leader>gf", require("fzf-lua").git_files, { desc = "Search [G]it [F]iles" })
+vim.keymap.set("n", "<leader>gc", require("fzf-lua").git_commits, { desc = "Search [G]it [C]ommits" })
+vim.keymap.set("n", "<leader>gb", require("fzf-lua").git_bcommits, { desc = "Search [G]it [B]uffer commits" })
+-- LSP
 vim.keymap.set("n", "<leader>sd", require("fzf-lua").diagnostics_document, { desc = "[S]earch [D]iagnostics" })
 vim.keymap.set("n", "<leader>so", require("fzf-lua").lsp_references, { desc = "LSP: [S]earch [O]ccurences" })
+-- Misc
+vim.keymap.set("n", "<leader>sb", require("fzf-lua").builtin, { desc = "[S]earch fzf-lua [B]uiltins" })
+vim.keymap.set("n", "<leader>sh", require("fzf-lua").help_tags, { desc = "[S]earch [H]elp" })
 vim.keymap.set("n", "<leader>sr", require("fzf-lua").resume, { desc = "[S]earch [R]esume" })
 
 require("nvim-treesitter.configs").setup({
