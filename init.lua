@@ -286,7 +286,16 @@ vim.keymap.set("x", "ih", gitsigns.select_hunk, { desc = "Git: visual select [i]
 -- nvim-treesitter: Syntax Highlighting {{{2
 require("nvim-treesitter.configs").setup({
     -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-    ensure_installed = { "python", "cpp", "c", "markdown", "lua", "rust", "vim" },
+    ensure_installed = {
+        "python",
+        "cpp",
+        "c",
+        "markdown",
+        "markdown_inline",
+        "lua",
+        "rust",
+        "vim",
+    },
 
     -- Install languages synchronously (only applied to `ensure_installed`)
     sync_install = false,
