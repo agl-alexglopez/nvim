@@ -118,13 +118,21 @@ require("lazy").setup({
     },
 
     {
+        "MeanderingProgrammer/render-markdown.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+        ---@module 'render-markdown'
+        ---@type render.md.UserConfig
+        opts = {},
+    },
+
+    {
         "ibhagwan/fzf-lua",
         -- optional for icon support
         dependencies = {
             "junegunn/fzf",
             "BurntSushi/ripgrep",
-            "MeanderingProgrammer/render-markdown.nvim",
             "nvim-tree/nvim-web-devicons",
+            "MeanderingProgrammer/render-markdown.nvim",
         },
         -- or if using mini.icons/mini.nvim
         -- dependencies = { "echasnovski/mini.icons" },
@@ -446,3 +454,8 @@ vim.keymap.set("n", "<leader>e", function()
 end, { desc = "[e] toggle all errors or current line errors" })
 -- Diagnostic keymap
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
+-- render-markdown: Render Markdown in Previews {{{2
+require("render-markdown").setup({
+    enabled = true,
+    completions = { lsp = { enabled = true } },
+})
