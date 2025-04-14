@@ -12,57 +12,33 @@ vim.opt.mouse = "a"
 vim.opt.swapfile = false
 vim.opt.completeopt = "menuone,noinsert,popup,fuzzy"
 vim.opt.clipboard = "unnamedplus"
--- relative numbers can be slower for larger files
---vim.opt.relativenumber = true
--- don't auto commenting new lines n.b. turning off for now to see if I like auto commenting.
---vim.cmd [[au BufEnter * set fo-=c fo-=r fo-=o]]
-
 -- GUI
 vim.o.winborder = "rounded"
 vim.opt.showmatch = true
 vim.opt.laststatus = 2
 vim.opt.wrap = true
 vim.opt.colorcolumn = "80"
-
 --KeyMap
 vim.api.nvim_set_keymap("i", "<C-j>", "<Esc>", {})
 vim.api.nvim_set_keymap("t", "<C-j>", "<C-\\><C-N>", {})
-
 -- Ok defaults but try to ensure .editorconfig file in all projects.
 vim.opt.autoindent = true
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
--- remove whitespace on save
---vim.cmd([[au BufWritePre * :%s/\s\+$//e]])
-
 -- Sidebar
 vim.opt.number = true
 vim.opt.numberwidth = 3
 vim.opt.showcmd = true
 vim.opt.modelines = 0
-
 -- Search
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-
 -- Decrease update time
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
-
--- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
-vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank()
-    end,
-    group = highlight_group,
-    pattern = "*",
-})
-
 -- Terminal for a convenient right split.
 -- open a terminal pane on the right using :Term
 vim.cmd([[
@@ -98,7 +74,7 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+--  NOTE: Must happen before plugins are required!
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -106,7 +82,7 @@ vim.g.maplocalleader = " "
 require("lazy").setup({
 
     {
-        "folke/tokyonight.nvim",
+        "rebelot/kanagawa.nvim",
         lazy = false,
         priority = 1000,
         opts = {},
@@ -119,7 +95,10 @@ require("lazy").setup({
 
     {
         "MeanderingProgrammer/render-markdown.nvim",
-        dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-tree/nvim-web-devicons",
+        },
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
         opts = {},
@@ -173,32 +152,22 @@ require("lazy").setup({
         opts = {},
         -- Optional dependencies
         -- dependencies = { { "echasnovski/mini.icons", opts = {} } },
-        dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+        dependencies = { "nvim-tree/nvim-web-devicons" },
     },
 })
 -- Plugin Configuration {{{1
--- tokyonight: Theme {{{2
-require("tokyonight").setup({
-    -- storm, moon, night, day
-    style = "moon",
-    -- for :terminal
-    terminal_colors = true,
-    styles = {
-        -- Style to be applied to different syntax groups
-        -- Value is any valid attr-list value for `:help nvim_set_hl`
-        comments = { italic = false },
-        keywords = { italic = false },
-        -- Background styles. Can be "dark", "transparent" or "normal"
-        sidebars = "dark",
-        floats = "dark",
-    },
-    lualine_bold = true,
+-- kanagawa: Theme {{{2
+require("kanagawa").setup({
+    compile = true,
+    theme = "wave",
+    commentStyle = { italic = false },
+    keywordStyle = { italic = false },
 })
-vim.cmd([[colorscheme tokyonight]])
+vim.cmd([[colorscheme kanagawa]])
 -- lualine: Bottom Bar {{{2
 require("lualine").setup({
     options = {
-        theme = "tokyonight",
+        theme = "kanagawa",
     },
 })
 -- which-key: Which Key? {{{2
@@ -218,6 +187,15 @@ require("fzf-lua").setup({
     winopts = {
         preview = {
             default = "bat",
+        },
+    },
+    -- bat's themes are bad and never match nvim perfectly. Make plain text so
+    -- that text is themed according to nvim theme. Keep highlighting, line
+    -- numbers, and git diff marks and it looks nice and is not distracting.
+    previewers = {
+        bat = {
+            cmd = "bat",
+            args = "--color=never --style=numbers,changes --decorations=always",
         },
     },
 })
