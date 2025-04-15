@@ -365,12 +365,24 @@ vim.lsp.config["rust-analyzer"] = {
     filetypes = { "rust", "rs" },
 }
 
+vim.lsp.config["zls"] = {
+    cmd = { "zls" },
+    root_markers = { "build.zig", "build.zig.zon" },
+    filetypes = { "zig" },
+}
+
 vim.lsp.config["marksman"] = {
     cmd = { "marksman" },
     filetypes = { "md", "markdown" },
 }
 
-vim.lsp.enable({ "lua-language-server", "clangd", "rust-analyzer", "marksman" })
+vim.lsp.enable({
+    "lua-language-server",
+    "clangd",
+    "rust-analyzer",
+    "zls",
+    "marksman",
+})
 
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
