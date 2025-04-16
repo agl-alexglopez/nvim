@@ -80,19 +80,63 @@ vim.g.maplocalleader = " "
 
 -- Plugins
 require("lazy").setup({
-
+    -- kanagawa: Theme {{{2
     {
         "rebelot/kanagawa.nvim",
         lazy = false,
         priority = 1000,
-        opts = {},
+        config = function()
+            require("kanagawa").setup({
+                compile = true,
+                theme = "wave",
+                commentStyle = { italic = false },
+                keywordStyle = { italic = false },
+            })
+            vim.cmd([[colorscheme kanagawa]])
+        end,
     },
-
+    -- nvim-treesitter: Syntax Highlighting {{{2
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-    },
+        opts = {},
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+                ensure_installed = {
+                    "python",
+                    "cpp",
+                    "c",
+                    "markdown",
+                    "markdown_inline",
+                    "lua",
+                    "rust",
+                    "vim",
+                },
 
+                -- Install languages synchronously (only applied to `ensure_installed`)
+                sync_install = false,
+
+                -- List of parsers to ignore installing
+                --ignore_install = { "javascript" },
+
+                highlight = {
+                    -- `false` will disable the whole extension
+                    enable = true,
+
+                    -- list of language that will be disabled
+                    -- disable = { "" },
+
+                    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+                    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+                    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+                    -- Instead of true it can also be a list of languages
+                    additional_vim_regex_highlighting = false,
+                },
+            })
+        end,
+    },
+    -- render-markdown: Markdown Previews {{{2
     {
         "MeanderingProgrammer/render-markdown.nvim",
         dependencies = {
@@ -101,9 +145,12 @@ require("lazy").setup({
         },
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
-        opts = {},
+        opts = {
+            enabled = true,
+            completions = { lsp = { enabled = true } },
+        },
     },
-
+    -- fzf-lua: Previewing and Grepping {{{2
     {
         "ibhagwan/fzf-lua",
         -- optional for icon support
@@ -115,13 +162,345 @@ require("lazy").setup({
         },
         -- or if using mini.icons/mini.nvim
         -- dependencies = { "echasnovski/mini.icons" },
-        opts = {},
+        opts = {
+            winopts = {
+                preview = {
+                    default = "bat",
+                },
+            },
+            -- bat's themes are bad and never match nvim perfectly. Make plain text so
+            -- that text is themed according to nvim theme. Keep highlighting, line
+            -- numbers, and git diff marks and it looks nice and is not distracting.
+            previewers = {
+                bat = {
+                    cmd = "bat",
+                    args = "--color=never --style=numbers,changes --decorations=always",
+                },
+            },
+        },
+        keys = {
+            -- Files
+            {
+                mode = "n",
+                "<leader>?",
+                function()
+                    require("fzf-lua").oldfiles()
+                end,
+                desc = "[?] Find recently opened files",
+            },
+            {
+                mode = "n",
+                "<leader><space>",
+                function()
+                    require("fzf-lua").buffers()
+                end,
+                desc = "[ ] Find existing buffers",
+            },
+            {
+                mode = "n",
+                "<leader>sf",
+                function()
+                    require("fzf-lua").files()
+                end,
+                desc = "[S]earch [F]iles",
+            },
+            -- Grepping
+            {
+                mode = "n",
+                "<leader>/",
+                function()
+                    require("fzf-lua").lgrep_curbuf()
+                end,
+                desc = "[/] Live grep current buffer",
+            },
+            {
+                mode = "n",
+                "<leader>sw",
+                function()
+                    require("fzf-lua").grep_cword()
+                end,
+                desc = "[S]earch [W]ord under cursor",
+            },
+            {
+                mode = "n",
+                "<leader>sg",
+                function()
+                    require("fzf-lua").live_grep()
+                end,
+                desc = "[S]earch by [G]rep",
+            },
+            {
+                mode = "n",
+                "<leader>sl",
+                function()
+                    require("fzf-lua").live_grep_glob()
+                end,
+                desc = "[S]earch by grep g[L]ob",
+            },
+            {
+                mode = "n",
+                "<leader>sp",
+                function()
+                    require("fzf-lua").grep_project()
+                end,
+                desc = "[S]earch [P]roject",
+            },
+            {
+                mode = "v",
+                "<leader>s",
+                function()
+                    require("fzf-lua").grep_visual()
+                end,
+                desc = "[S]earch [V]isual selection",
+            },
+            -- Git
+            {
+                mode = "n",
+                "<leader>gf",
+                function()
+                    require("fzf-lua").git_files()
+                end,
+                desc = "Search [G]it [F]iles",
+            },
+            {
+                mode = "n",
+                "<leader>gc",
+                function()
+                    require("fzf-lua").git_commits()
+                end,
+                desc = "Search [G]it [C]ommits",
+            },
+            {
+                mode = "n",
+                "<leader>gb",
+                function()
+                    require("fzf-lua").git_bcommits()
+                end,
+                desc = "Search [G]it [B]uffer commits",
+            },
+            -- LSP
+            {
+                mode = "n",
+                "<leader>sd",
+                function()
+                    require("fzf-lua").diagnostics_document()
+                end,
+                desc = "[S]earch [D]iagnostics",
+            },
+            {
+                mode = "n",
+                "<leader>so",
+                function()
+                    require("fzf-lua").lsp_references()
+                end,
+                desc = "LSP: [S]earch [O]ccurences",
+            },
+            {
+                mode = "n",
+                "<leader>ds",
+                function()
+                    require("fzf-lua").lsp_document_symbols()
+                end,
+                desc = "LSP: [d]ocument [s]ymbols",
+            },
+            {
+                mode = "n",
+                "<leader>ws",
+                function()
+                    require("fzf-lua").lsp_workspace_symbols()
+                end,
+                desc = "LSP: [w]orkspace [s]ymbols",
+            },
+            {
+                mode = "n",
+                "gI",
+                function()
+                    require("fzf-lua").lsp_implementations()
+                end,
+                desc = "LSP: [g]oto [I]mplementation",
+            },
+            -- Misc
+            {
+                mode = "n",
+                "<leader>sb",
+                function()
+                    require("fzf-lua").builtin()
+                end,
+                desc = "[S]earch fzf-lua [B]uiltins",
+            },
+            {
+                mode = "n",
+                "<leader>sh",
+                function()
+                    require("fzf-lua").help_tags()
+                end,
+                desc = "[S]earch [H]elp",
+            },
+            {
+                mode = "n",
+                "<leader>sr",
+                function()
+                    require("fzf-lua").resume()
+                end,
+                desc = "[S]earch [R]esume",
+            },
+        },
     },
-
+    -- mason.nvim: LSP Downloader {{{2
     { "williamboman/mason.nvim" },
-
-    { "lewis6991/gitsigns.nvim" },
-
+    -- gitsigns: Navigate Git {{{2
+    {
+        "lewis6991/gitsigns.nvim",
+        keys = {
+            {
+                mode = "n",
+                "]c",
+                function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ "]c", bang = true })
+                    else
+                        require("gitsigns").nav_hunk("next")
+                    end
+                end,
+                desc = "Git: [c] next hunk",
+            },
+            {
+                mode = "n",
+                "[c",
+                function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ "[c", bang = true })
+                    else
+                        require("gitsigns").nav_hunk("prev")
+                    end
+                end,
+                desc = "Git: [c] prev hunk",
+            },
+            -- Git Signs Actions
+            {
+                mode = "n",
+                "<leader>hs",
+                function()
+                    require("gitsigns").stage_hunk()
+                end,
+                desc = "Git: [h]unk [s]tage",
+            },
+            {
+                mode = "n",
+                "<leader>hr",
+                function()
+                    require("gitsigns").reset_hunk()
+                end,
+                desc = "Git: [h]unk [r]eset",
+            },
+            {
+                mode = "v",
+                "<leader>hs",
+                function()
+                    require("gitsigns").stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+                end,
+                desc = "Git: [h]unk [s]tage",
+            },
+            {
+                mode = "v",
+                "<leader>hr",
+                function()
+                    require("gitsigns").reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+                end,
+                desc = "Git: [h]unk [r]eset",
+            },
+            {
+                mode = "n",
+                "<leader>hS",
+                function()
+                    require("gitsigns").stage_buffer()
+                end,
+                desc = "Git: [h]unk [S]tage_buffer",
+            },
+            {
+                mode = "n",
+                "<leader>hu",
+                function()
+                    require("gitsigns").undo_stage_hunk()
+                end,
+                desc = "Git: [h]unk [u]ndo stage hunk",
+            },
+            {
+                mode = "n",
+                "<leader>hR",
+                function()
+                    require("gitsigns").reset_buffer()
+                end,
+                desc = "Git: [h]unk [R]eset buffer",
+            },
+            {
+                mode = "n",
+                "<leader>hp",
+                function()
+                    require("gitsigns").preview_hunk()
+                end,
+                desc = "Git: [h]unk [p]review",
+            },
+            {
+                mode = "n",
+                "<leader>hb",
+                function()
+                    require("gitsigns").blame_line({ full = true })
+                end,
+                desc = "Git: [h]unk [b]lame line",
+            },
+            {
+                mode = "n",
+                "<leader>tb",
+                function()
+                    require("gitsigns").toggle_current_line_blame()
+                end,
+                desc = "Git: [t]oggle current line [b]lame",
+            },
+            {
+                mode = "n",
+                "<leader>hd",
+                function()
+                    require("gitsigns").diffthis()
+                end,
+                desc = "Git: [h]unk [d]iff",
+            },
+            {
+                mode = "n",
+                "<leader>hD",
+                function()
+                    require("gitsigns").diffthis("~")
+                end,
+                desc = "Git: [h]unk [D]iff~",
+            },
+            {
+                mode = "n",
+                "<leader>td",
+                function()
+                    require("gitsigns").toggle_deleted()
+                end,
+                desc = "Git: [t]oggle [d]eleted",
+            },
+            -- Text object
+            {
+                mode = "o",
+                "ih",
+                function()
+                    require("gitsigns").select_hunk()
+                end,
+                desc = "Git: operate on [i]nternal [h]unk",
+            },
+            {
+                mode = "x",
+                "ih",
+                function()
+                    require("gitsigns").select_hunk()
+                end,
+                desc = "Git: visual select [i]nternal [h]unk",
+            },
+        },
+    },
+    -- which-key.nvim: Which Key? {{{2
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
@@ -129,14 +508,25 @@ require("lazy").setup({
             vim.o.timeout = true
             vim.o.timeoutlen = 300
         end,
-        opts = {},
+        opts = {
+            spec = {
+                { "<leader>c", group = "[c]ode" },
+                { "<leader>d", group = "[d]ocument" },
+                { "<leader>g", group = "[g]it" },
+                { "<leader>h", group = "[h]unk git" },
+                { "<leader>r", group = "[r]ename" },
+                { "<leader>s", group = "[s]earch" },
+                { "<leader>w", group = "[w]orkspace" },
+            },
+        },
     },
-
+    -- lualine.nvim: Bottom Bar {{{2
     {
         "nvim-lualine/lualine.nvim",
         dependencies = { "kyazdani42/nvim-web-devicons", opt = true },
+        opts = { theme = "kanagawa" },
     },
-
+    -- nvim-autopairs: Pair Completion {{{2
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
@@ -144,177 +534,18 @@ require("lazy").setup({
         -- use opts = {} for passing setup options
         -- this is equivalent to setup({}) function
     },
-
+    -- oil.nvim: Directories are Buffers {{{2
     {
         "stevearc/oil.nvim",
         ---@module 'oil'
         ---@type oil.SetupOpts
-        opts = {},
         -- Optional dependencies
         -- dependencies = { { "echasnovski/mini.icons", opts = {} } },
         dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = {},
     },
 })
--- Plugin Configuration {{{1
--- kanagawa: Theme {{{2
-require("kanagawa").setup({
-    compile = true,
-    theme = "wave",
-    commentStyle = { italic = false },
-    keywordStyle = { italic = false },
-})
-vim.cmd([[colorscheme kanagawa]])
--- lualine: Bottom Bar {{{2
-require("lualine").setup({
-    options = {
-        theme = "kanagawa",
-    },
-})
--- which-key: Which Key? {{{2
-require("which-key").add({
-    { "<leader>c", group = "[c]ode" },
-    { "<leader>d", group = "[d]ocument" },
-    { "<leader>g", group = "[g]it" },
-    { "<leader>h", group = "[h]unk git" },
-    { "<leader>r", group = "[r]ename" },
-    { "<leader>s", group = "[s]earch" },
-    { "<leader>w", group = "[w]orkspace" },
-})
--- oil: Directories are Buffers {{{2
-require("oil").setup()
--- fzf-lua: Finding, Grepping, and Previews {{{2
-require("fzf-lua").setup({
-    winopts = {
-        preview = {
-            default = "bat",
-        },
-    },
-    -- bat's themes are bad and never match nvim perfectly. Make plain text so
-    -- that text is themed according to nvim theme. Keep highlighting, line
-    -- numbers, and git diff marks and it looks nice and is not distracting.
-    previewers = {
-        bat = {
-            cmd = "bat",
-            args = "--color=never --style=numbers,changes --decorations=always",
-        },
-    },
-})
-local fzf_lua = require("fzf-lua")
--- Files
-vim.keymap.set("n", "<leader>?", fzf_lua.oldfiles, { desc = "[?] Find recently opened files" })
-vim.keymap.set("n", "<leader><space>", fzf_lua.buffers, { desc = "[ ] Find existing buffers" })
-vim.keymap.set("n", "<leader>sf", fzf_lua.files, { desc = "[S]earch [F]iles" })
--- Grepping
-vim.keymap.set("n", "<leader>/", fzf_lua.lgrep_curbuf, { desc = "[/] Live grep current buffer" })
-vim.keymap.set("n", "<leader>sw", fzf_lua.grep_cword, { desc = "[S]earch [W]ord under cursor" })
-vim.keymap.set("n", "<leader>sg", fzf_lua.live_grep, { desc = "[S]earch by [G]rep" })
-vim.keymap.set("n", "<leader>sl", fzf_lua.live_grep_glob, { desc = "[S]earch by grep g[L]ob" })
-vim.keymap.set("n", "<leader>sp", fzf_lua.grep_project, { desc = "[S]earch [P]roject" })
-vim.keymap.set("v", "<leader>s", fzf_lua.grep_visual, { desc = "[S]earch [V]isual selection" })
--- Git
-vim.keymap.set("n", "<leader>gf", fzf_lua.git_files, { desc = "Search [G]it [F]iles" })
-vim.keymap.set("n", "<leader>gc", fzf_lua.git_commits, { desc = "Search [G]it [C]ommits" })
-vim.keymap.set("n", "<leader>gb", fzf_lua.git_bcommits, { desc = "Search [G]it [B]uffer commits" })
--- LSP
-vim.keymap.set("n", "<leader>sd", fzf_lua.diagnostics_document, { desc = "[S]earch [D]iagnostics" })
-vim.keymap.set("n", "<leader>so", fzf_lua.lsp_references, { desc = "LSP: [S]earch [O]ccurences" })
-vim.keymap.set("n", "<leader>ds", fzf_lua.lsp_document_symbols, { desc = "LSP: [d]ocument [s]ymbols" })
-vim.keymap.set("n", "<leader>ws", fzf_lua.lsp_workspace_symbols, { desc = "LSP: [w]orkspace [s]ymbols" })
-vim.keymap.set("n", "gI", fzf_lua.lsp_implementations, { desc = "LSP: [g]oto [I]mplementation" })
--- Misc
-vim.keymap.set("n", "<leader>sb", fzf_lua.builtin, { desc = "[S]earch fzf-lua [B]uiltins" })
-vim.keymap.set("n", "<leader>sh", fzf_lua.help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sr", fzf_lua.resume, { desc = "[S]earch [R]esume" })
-
--- gitsigns: Navigating the Git Gutters {{{2
-require("gitsigns").setup({})
-local gitsigns = require("gitsigns")
-vim.keymap.set("n", "]c", function()
-    if vim.wo.diff then
-        vim.cmd.normal({ "]c", bang = true })
-    else
-        gitsigns.nav_hunk("next")
-    end
-end, { desc = "Git: [c] next hunk" })
-vim.keymap.set("n", "[c", function()
-    if vim.wo.diff then
-        vim.cmd.normal({ "[c", bang = true })
-    else
-        gitsigns.nav_hunk("prev")
-    end
-end, { desc = "Git: [c] prev hunk" })
--- Git Signs Actions
-vim.keymap.set("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Git: [h]unk [s]tage" })
-vim.keymap.set("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Git: [h]unk [r]eset" })
-vim.keymap.set("v", "<leader>hs", function()
-    gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-end, { desc = "Git: [h]unk [s]tage" })
-vim.keymap.set("v", "<leader>hr", function()
-    gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-end, { desc = "Git: [h]unk [r]eset" })
-vim.keymap.set("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Git: [h]unk [S]tage_buffer" })
-vim.keymap.set("n", "<leader>hu", gitsigns.undo_stage_hunk, { desc = "Git: [h]unk [u]ndo stage hunk" })
-vim.keymap.set("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Git: [h]unk [R]eset buffer" })
-vim.keymap.set("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Git: [h]unk [p]review" })
-vim.keymap.set("n", "<leader>hb", function()
-    gitsigns.blame_line({ full = true })
-end, { desc = "Git: [h]unk [b]lame line" })
-vim.keymap.set("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Git: [t]oggle current line [b]lame" })
-vim.keymap.set("n", "<leader>hd", gitsigns.diffthis, { desc = "Git: [h]unk [d]iff" })
-vim.keymap.set("n", "<leader>hD", function()
-    gitsigns.diffthis("~")
-end, { desc = "Git: [h]unk [D]iff~" })
-vim.keymap.set("n", "<leader>td", gitsigns.toggle_deleted, { desc = "Git: [t]oggle [d]eleted" })
--- Text object
-vim.keymap.set("o", "ih", gitsigns.select_hunk, { desc = "Git: operate on [i]nternal [h]unk" })
-vim.keymap.set("x", "ih", gitsigns.select_hunk, { desc = "Git: visual select [i]nternal [h]unk" })
-
--- nvim-treesitter: Syntax Highlighting {{{2
-require("nvim-treesitter.configs").setup({
-    -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-    ensure_installed = {
-        "python",
-        "cpp",
-        "c",
-        "markdown",
-        "markdown_inline",
-        "lua",
-        "rust",
-        "vim",
-    },
-
-    -- Install languages synchronously (only applied to `ensure_installed`)
-    sync_install = false,
-
-    -- List of parsers to ignore installing
-    --ignore_install = { "javascript" },
-
-    highlight = {
-        -- `false` will disable the whole extension
-        enable = true,
-
-        -- list of language that will be disabled
-        -- disable = { "" },
-
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-        -- Using this option may slow down your editor, and you may see some duplicate highlights.
-        -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
-    },
-})
--- nvim-autopairs: Autocomplete Symbol Pairs {{{2
-require("nvim-autopairs").setup({
-    check_ts = true,
-    ts_config = {
-        -- it will not add a pair on that treesitter node
-        lua = { "string" },
-        javascript = { "template_string" },
-    },
-})
--- mason: Manage LSP Servers via Neovim {{{2
-require("mason").setup({})
--- vim.[lsp|api|diagnostic]: Native LSP Configuration {{{2
+-- Neovim LSP {{{1
 vim.filetype.add({
     extension = {
         cpp = "cpp",
@@ -462,8 +693,3 @@ vim.keymap.set("n", "<leader>e", function()
 end, { desc = "[e] toggle all errors or current line errors" })
 -- Diagnostic keymap
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
--- render-markdown: Render Markdown in Previews {{{2
-require("render-markdown").setup({
-    enabled = true,
-    completions = { lsp = { enabled = true } },
-})
