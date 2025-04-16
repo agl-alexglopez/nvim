@@ -88,7 +88,7 @@ require("lazy").setup({
         config = function()
             require("kanagawa").setup({
                 compile = true,
-                theme = "wave",
+                colors = { theme = { all = { ui = { bg_gutter = "none" } } } },
                 commentStyle = { italic = false },
                 keywordStyle = { italic = false },
             })
@@ -351,6 +351,8 @@ require("lazy").setup({
     -- gitsigns: Navigate Git {{{2
     {
         "lewis6991/gitsigns.nvim",
+        -- Think of gitsigns like themes as gutters are key to UI.
+        lazy = false,
         keys = {
             {
                 mode = "n",
@@ -499,6 +501,9 @@ require("lazy").setup({
                 desc = "Git: visual select [i]nternal [h]unk",
             },
         },
+        config = function()
+            require("gitsigns").setup({})
+        end,
     },
     -- which-key.nvim: Which Key? {{{2
     {
