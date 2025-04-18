@@ -112,6 +112,7 @@ require("lazy").setup({
                     "lua",
                     "rust",
                     "vim",
+                    "vimdoc",
                 },
 
                 -- Install languages synchronously (only applied to `ensure_installed`)
@@ -347,7 +348,12 @@ require("lazy").setup({
         },
     },
     -- mason.nvim: LSP Downloader {{{2
-    { "williamboman/mason.nvim" },
+    {
+        "williamboman/mason.nvim",
+        config = function()
+            require("mason").setup({})
+        end,
+    },
     -- gitsigns: Navigate Git {{{2
     {
         "lewis6991/gitsigns.nvim",
