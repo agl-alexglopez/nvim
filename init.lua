@@ -216,6 +216,14 @@ require("lazy").setup({
             },
             {
                 mode = "n",
+                "<leader>l",
+                function()
+                    require("fzf-lua").lines()
+                end,
+                desc = "[l] Grep open buffer [L]ines",
+            },
+            {
+                mode = "n",
                 "<leader>sw",
                 function()
                     require("fzf-lua").grep_cword()
