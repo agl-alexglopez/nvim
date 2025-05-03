@@ -631,7 +631,7 @@ vim.lsp.config["zls"] = {
             semantic_tokens = "partial",
 
             -- omit if zig in path
-            -- zig_exe_path = '~/.local/bin/zig'
+            -- zig_exe_path = ""
         },
     },
 }
@@ -671,28 +671,31 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 vim.split("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM.> ", "")
             vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
         end
+        -- Note: un-comment the commented out conditional checks if needed but
+        -- some language servers like zls don't seem to detect these checks.
         -- Auto-format ("lint") on save.
         -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
-        if
-            not client:supports_method("textDocument/willSaveWaitUntil")
-            and client:supports_method("textDocument/formatting")
-        then
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                group = vim.api.nvim_create_augroup("my.lsp", { clear = false }),
-                buffer = args.buf,
-                callback = function()
-                    vim.lsp.buf.format({
-                        bufnr = args.buf,
-                        id = client.id,
-                        timeout_ms = 1000,
-                    })
-                end,
-            })
-            -- Create a command `:Format` local to the LSP buffer
-            vim.api.nvim_buf_create_user_command(args.buf, "Format", function(_)
-                vim.lsp.buf.format()
-            end, { desc = "format current buffer with LSP" })
-        end
+        -- if
+        --     not client:supports_method("textDocument/willSaveWaitUntil")
+        --     and client:supports_method("textDocument/formatting")
+        -- then
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = vim.api.nvim_create_augroup("my.lsp", { clear = false }),
+            buffer = args.buf,
+            callback = function()
+                vim.lsp.buf.format({
+                    bufnr = args.buf,
+                    id = client.id,
+                    timeout_ms = 1000,
+                })
+            end,
+        })
+        -- end
+        -- End of commented out conditional format on save checks.
+        -- Create a command `:Format` local to the LSP buffer
+        vim.api.nvim_buf_create_user_command(args.buf, "Format", function(_)
+            vim.lsp.buf.format()
+        end, { desc = "Format current buffer with LSP" })
         local function map(mode, l, r, desc)
             desc = desc or ""
             vim.keymap.set(mode, l, r, { buffer = args.buf, desc = desc })
