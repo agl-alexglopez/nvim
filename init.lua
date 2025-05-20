@@ -205,6 +205,14 @@ require("lazy").setup({
                 end,
                 desc = "[S]earch [F]iles",
             },
+            {
+                mode = "n",
+                "<leader>sm",
+                function()
+                    require("fzf-lua").manpages()
+                end,
+                desc = "[S]earch [M]anpages",
+            },
             -- Grepping
             {
                 mode = "n",
