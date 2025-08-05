@@ -33,3 +33,10 @@ serializable
 copyable
 updateable
 multimap
+memoize
+subtree
+DFS
+bitwise
+multithreading
+24-bit
+RGB
