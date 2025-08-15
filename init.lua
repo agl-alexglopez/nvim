@@ -650,8 +650,8 @@ vim.lsp.config["zls"] = {
 local function ZigSettings()
     vim.opt_local.textwidth = 80 -- wrap at 80 columns
     vim.opt_local.formatoptions:append("c") -- wrap comments
-    vim.opt_local.formatoptions:remove("t") -- don't wrap text/code
     vim.opt_local.formatoptions:remove("l") -- allow re-wrapping comments
+    vim.opt_local.formatoptions:remove("t") -- don't wrap text/code
 end
 vim.api.nvim_create_augroup("ZigFileTypeSettings", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
