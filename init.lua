@@ -644,6 +644,22 @@ vim.lsp.config["zls"] = {
     },
 }
 
+-- Zig fmt does not believe in any options to be set but comments should be
+-- sane and neat throughout a zig file. So comments will get 80 char limit while
+-- all code and other text follows zig fmt philosophy.
+local function ZigSettings()
+    vim.opt_local.textwidth = 80 -- wrap at 80 columns
+    vim.opt_local.formatoptions:append("c") -- wrap comments
+    vim.opt_local.formatoptions:remove("t") -- don't wrap text/code
+    vim.opt_local.formatoptions:remove("l") -- allow re-wrapping comments
+end
+vim.api.nvim_create_augroup("ZigFileTypeSettings", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+    group = "ZigFileTypeSettings",
+    pattern = "zig",
+    callback = ZigSettings,
+})
+
 vim.lsp.config["marksman"] = {
     cmd = { "marksman" },
     filetypes = { "md", "markdown" },
