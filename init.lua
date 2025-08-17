@@ -648,7 +648,8 @@ vim.lsp.config["zls"] = {
 -- sane and neat throughout a zig file. So comments will get 80 char limit while
 -- all code and other text follows zig fmt philosophy.
 local function ZigSettings()
-    vim.opt_local.textwidth = 80 -- wrap at 80 columns
+    vim.opt_local.colorcolumn = "100"
+    vim.opt_local.textwidth = 100 -- wrap at 80 columns
     vim.opt_local.formatoptions:append("c") -- wrap comments
     vim.opt_local.formatoptions:remove("l") -- allow re-wrapping comments
     vim.opt_local.formatoptions:remove("t") -- don't wrap text/code
