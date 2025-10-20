@@ -53,10 +53,10 @@ vim.cmd([[
     autocmd BufLeave term://* stopinsert
 ]])
 
--- enable folding
+-- enable folding disabled for now.
 -- vim: foldmethod=marker foldlevel=0
-vim.opt.foldmethod = "marker"
-vim.opt.foldenable = true
+-- vim.opt.foldmethod = "marker"
+-- vim.opt.foldenable = true
 -- Lazy Plugin Management {{{1
 -- Install lazy if not installed to prevent plugin errors on new nvim config.
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
