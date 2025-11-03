@@ -113,6 +113,11 @@ require("lazy").setup({
                     "rust",
                     "vim",
                     "vimdoc",
+                    "javascript",
+                    "typescript",
+                    "html",
+                    "css",
+                    "json",
                 },
 
                 -- Install languages synchronously (only applied to `ensure_installed`)
