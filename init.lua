@@ -250,11 +250,11 @@ require("lazy").setup({
             },
             {
                 mode = "n",
-                "<leader>sw",
+                "<leader>sc",
                 function()
                     require("fzf-lua").grep_cword()
                 end,
-                desc = "[S]earch [W]ord under cursor",
+                desc = "[S]earch [C]ursor word",
             },
             {
                 mode = "n",
@@ -318,9 +318,17 @@ require("lazy").setup({
                 mode = "n",
                 "<leader>sd",
                 function()
-                    require("fzf-lua").diagnostics_document()
+                    require("fzf-lua").lsp_document_diagnostics()
                 end,
                 desc = "[S]earch [D]iagnostics",
+            },
+            {
+                mode = "n",
+                "<leader>sw",
+                function()
+                    require("fzf-lua").lsp_workspace_diagnostics()
+                end,
+                desc = "[S]earch [W]orkspace diagnostics",
             },
             {
                 mode = "n",
