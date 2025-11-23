@@ -196,6 +196,11 @@ require("lazy").setup({
                     args = "--color=never --style=numbers,changes --decorations=always",
                 },
             },
+            keymap = {
+                fzf = {
+                    ["ctrl-q"] = "select-all+accept",
+                },
+            },
         },
         keys = {
             -- Files
@@ -279,6 +284,14 @@ require("lazy").setup({
                     require("fzf-lua").grep_project()
                 end,
                 desc = "[S]earch [P]roject",
+            },
+            {
+                mode = "n",
+                "<leader>sq",
+                function()
+                    require("fzf-lua").lgrep_quickfix()
+                end,
+                desc = "[S]earch [Q]uick fix",
             },
             {
                 mode = "v",
@@ -675,7 +688,7 @@ vim.lsp.config["zls"] = {
 -- all code and other text follows zig fmt philosophy.
 local function ZigSettings()
     vim.opt_local.colorcolumn = "100"
-    vim.opt_local.textwidth = 100 -- wrap at 80 columns
+    vim.opt_local.textwidth = 100 -- wrap at these columns
     vim.opt_local.formatoptions:append("c") -- wrap comments
     vim.opt_local.formatoptions:remove("l") -- allow re-wrapping comments
     vim.opt_local.formatoptions:remove("t") -- don't wrap text/code
