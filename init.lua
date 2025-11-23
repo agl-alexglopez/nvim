@@ -21,6 +21,8 @@ vim.opt.colorcolumn = "80"
 --KeyMap
 vim.api.nvim_set_keymap("i", "<C-j>", "<Esc>", {})
 vim.api.nvim_set_keymap("t", "<C-j>", "<C-\\><C-N>", {})
+vim.api.nvim_set_keymap("n", "<M-j>", "<cmd>cnext<CR>", {})
+vim.api.nvim_set_keymap("n", "<M-k>", "<cmd>cprev<CR>", {})
 -- Ok defaults but try to ensure .editorconfig file in all projects.
 vim.opt.autoindent = true
 vim.opt.softtabstop = 4
