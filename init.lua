@@ -200,6 +200,9 @@ require("lazy").setup({
                 fzf = {
                     ["ctrl-q"] = "select-all+accept",
                 },
+                lsp = {
+                    ["ctrl-q"] = "select-all+accept",
+                },
             },
         },
         keys = {
